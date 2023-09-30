@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 import logging
 logger = logging.getLogger(__name__)
@@ -96,7 +97,13 @@ def api_favorite(request, id):
 @api_view(['GET'])
 def api_subscriptions(request):
     my_subscriptions = Subscribe.objects.filter(user=request.user)
-    return Response({"errors": my_subscriptions[0].user,}, status=status.HTTP_201_CREATED)
+    # paginator = PageNumberPagination()
+    # paginator.page_size = 10
+    # person_objects = Person.objects.all()
+    # result_page = paginator.paginate_queryset(person_objects, request)
+    # serializer = PersonSerializer(result_page, many=True)
+    # return paginator.get_paginated_response(serializer.data)
+    return Response({"errors": "asdf",}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST', 'DELETE'])
 def api_subscribe(request, id):
@@ -116,8 +123,7 @@ def api_subscribe(request, id):
         data2return["recipes_count"] = my_recipes.count()
         return Response(data2return, status=204)
         
-    # elif request.method == "DELETE":
-    #     pass
-    #     Favorite.objects.filter(recipe=my_recipe, user=request.user).delete()
-    #     return Response({"errors": "",}, status=status.HTTP_201_CREATED)
+    elif request.method == "DELETE":
+        Favorite.objects.filter(recipe=my_recipe, user=request.user).delete()
+        return Response({"errors": "",}, status=status.HTTP_201_CREATED)
     

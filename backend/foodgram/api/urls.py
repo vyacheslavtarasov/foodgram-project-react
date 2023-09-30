@@ -11,7 +11,7 @@ router.register(r"ingredients", IngredientViewSet, basename="ingredients")
 router.register(r"tags", TagViewSet, basename="tags")
 
 urlpatterns = [
-    
+    path('api/users/subscriptions', api_subscriptions),
     path('api/users/<int:id>/subscribe', api_subscribe),
     path('api/recipes/<int:id>/favorite/', api_favorite),
     path("api/", include(router.urls)),
