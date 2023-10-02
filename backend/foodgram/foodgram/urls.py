@@ -25,3 +25,4 @@ urlpatterns = [
     path("api/", include("djoser.urls")),  # Работа с пользователями
     path("api/auth/", include("djoser.urls.authtoken")),  # Работа с токенами
 ]
+

@@ -15,7 +15,7 @@ from api.serializers import (
     UserSerializer
 )
 from django.shortcuts import get_object_or_404
-from api.models import Ingredients, Tag, Recipe, CustomUser, Favorite, Subscribe
+from api.models import Ingredient, Tag, Recipe, CustomUser, Favorite, Subscribe
 from rest_framework import filters, mixins, permissions, status, viewsets
 
 class TagViewSet(
@@ -48,7 +48,7 @@ class IngredientViewSet(
     Получить список всех Ингредиентов.
     """
 
-    queryset = Ingredients.objects.all()
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     lookup_field = "id"
     search_fields = ("name",)
@@ -96,14 +96,29 @@ def api_favorite(request, id):
 
 @api_view(['GET'])
 def api_subscriptions(request):
+    
     my_subscriptions = Subscribe.objects.filter(user=request.user)
-    # paginator = PageNumberPagination()
-    # paginator.page_size = 10
-    # person_objects = Person.objects.all()
-    # result_page = paginator.paginate_queryset(person_objects, request)
-    # serializer = PersonSerializer(result_page, many=True)
-    # return paginator.get_paginated_response(serializer.data)
-    return Response({"errors": "asdf",}, status=status.HTTP_201_CREATED)
+    
+    entries = []
+    for entry in my_subscriptions:
+        data2return = {}
+        data2return["id"] = entry.user_subscribed_on.id
+        data2return["email"] = entry.user_subscribed_on.email
+        data2return["first_name"] = entry.user_subscribed_on.first_name
+        data2return["last_name"] = entry.user_subscribed_on.last_name
+        data2return["is_subscribed"] = True
+        my_recipes = Recipe.objects.filter(author=entry.user_subscribed_on)
+        data2return["recipes"] = []
+        for my_recipe in my_recipes:
+            data2return["recipes"].append({"id": my_recipe.id, "name": my_recipe.name, "cooking_time": my_recipe.cooking_time, "image": my_recipe.image.url})
+        data2return["recipes_count"] = my_recipes.count()
+
+        entries.append(data2return)
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    result_page = paginator.paginate_queryset(entries, request)
+    return paginator.get_paginated_response(result_page)
+
 
 @api_view(['POST', 'DELETE'])
 def api_subscribe(request, id):

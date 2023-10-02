@@ -2,7 +2,7 @@ from rest_framework import serializers
 import base64
 from django.shortcuts import get_object_or_404
 
-from api.models import Ingredients, Tag, CustomUser, Recipe, RecipeTag, RecipeIngredient, Favorite
+from api.models import Ingredient, Tag, CustomUser, Recipe, RecipeTag, RecipeIngredient, Favorite
 from django.core.files.base import ContentFile
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Ingredients
+        model = Ingredient
         fields = ("name", "measurement_name")
 
 class Base64ImageField(serializers.ImageField):
@@ -57,7 +57,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.BooleanField(required=False)
 
     tags = TagSerializer(many=True, read_only=True)
-    ingredients = serializers.SerializerMethodField(
+    ingredient = serializers.SerializerMethodField(
         'get_ingredients_with_amount',
         read_only=True,
     )
@@ -88,7 +88,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
-            my_ingredient = get_object_or_404(Ingredients, id=ingredient_id)
+            my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
             
             RecipeIngredient.objects.create(recipe = me, ingredient = my_ingredient, amount = ingredient_amount)
 
@@ -110,7 +110,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
-            my_ingredient = get_object_or_404(Ingredients, id=ingredient_id)
+            my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
             
             
             RecipeIngredient.objects.create(recipe = instance, ingredient = my_ingredient, amount = ingredient_amount)
