@@ -2,7 +2,7 @@ from rest_framework import serializers
 import base64
 from django.shortcuts import get_object_or_404
 
-from api.models import Ingredient, Tag, CustomUser, Recipe, RecipeTag, RecipeIngredient, Favorite
+from api.models import Ingredient, Tag, CustomUser, Recipe, RecipeTag, RecipeIngredient, Favorite, ShoppingCart
 from django.core.files.base import ContentFile
 
 class UserSerializer(serializers.ModelSerializer):
@@ -53,19 +53,28 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
-    is_favorited = serializers.BooleanField(required=False)
-    is_in_shopping_cart = serializers.BooleanField(required=False)
+    # is_favorited = serializers.BooleanField(required=False)
+    # is_in_shopping_cart = serializers.BooleanField(required=False)
 
     tags = TagSerializer(many=True, read_only=True)
     ingredient = serializers.SerializerMethodField(
         'get_ingredients_with_amount',
         read_only=True,
     )
+    is_favorited = serializers.SerializerMethodField(
+        'check_is_favorited',
+        read_only=True
+    )
+
+    is_in_shopping_cart = serializers.SerializerMethodField(
+        'check_is_in_shopping_cart',
+        read_only=True
+    )
     # author = serializers.SlugRelatedField(slug_field="email", read_only=True)
     author = UserSerializer(read_only=True)
     class Meta:
         model = Recipe
-        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredients", "image", "is_favorited", "is_in_shopping_cart")
+        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredient", "image", "is_favorited", "is_in_shopping_cart")
 
     def get_ingredients_with_amount(self, obj):
         ret = []
@@ -78,6 +87,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             ret.append(res)
         return ret
     
+    def check_is_favorited(self, obj):
+        if Favorite.objects.filter(user=self.context['request'].user, recipe=obj).exists():
+            return True
+        return False
+    
+    def check_is_in_shopping_cart(self, obj):
+        if ShoppingCart.objects.filter(user=self.context['request'].user, recipe=obj).exists():
+            return True
+        return False
+
     def create(self, validated_data):
         me = Recipe.objects.create(**validated_data)
         for tag_id in self.initial_data["tags"]:

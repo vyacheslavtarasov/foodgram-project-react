@@ -131,6 +131,8 @@ class RecipeIngredient(models.Model):
     
 class Favorite(models.Model):
     """Favorite model"""
+
+
     user = models.ForeignKey(
         CustomUser, related_name='custom_users', null=True,
         on_delete=models.SET_NULL
@@ -148,6 +150,25 @@ class Favorite(models.Model):
     def __str__(self):
         return f'{self.user} {self.recipe}'
 
+class ShoppingCart(models.Model):
+    """ShoppingCart model"""
+
+    user = models.ForeignKey(
+        CustomUser, related_name='shopping_cart_users', null=True,
+        on_delete=models.SET_NULL
+    )
+    recipe = models.ForeignKey(
+        Recipe, related_name='shopping_cart_recipes', null=True,
+        on_delete=models.SET_NULL
+    )
+
+    class Meta:
+        verbose_name = "Shopping Cart"
+        verbose_name_plural = "Shopping Carts"
+        ordering = ["id"]
+
+    def __str__(self):
+        return f'{self.user} {self.recipe}'
 
 class Subscribe(models.Model):
     """Subscribe model"""

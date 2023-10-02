@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from django.http import HttpResponse, HttpResponseNotFound
 
 import logging
 logger = logging.getLogger(__name__)
@@ -15,7 +16,7 @@ from api.serializers import (
     UserSerializer
 )
 from django.shortcuts import get_object_or_404
-from api.models import Ingredient, Tag, Recipe, CustomUser, Favorite, Subscribe
+from api.models import Ingredient, Tag, Recipe, CustomUser, Favorite, Subscribe, ShoppingCart, RecipeIngredient
 from rest_framework import filters, mixins, permissions, status, viewsets
 
 class TagViewSet(
@@ -79,7 +80,19 @@ class RecipeViewSet(
 
     def perform_create(self, serializer):
         serializer.save(is_favorited=False, is_in_shopping_cart=False, author=self.request.user)
-    
+
+
+@api_view(['DELETE', 'POST'])
+def api_shopping_cart(request, id):
+    my_recipe = get_object_or_404(Recipe, id=id)
+    if request.method == 'POST':
+        ShoppingCart.objects.get_or_create(recipe=my_recipe, user=request.user)
+        return Response({"id": my_recipe.id, "name": my_recipe.name, "cooking_time": my_recipe.cooking_time, "image": my_recipe.image.url})
+        
+    elif request.method == "DELETE":
+        ShoppingCart.objects.filter(recipe=my_recipe, user=request.user).delete()
+        return Response({"errors": "",}, status=status.HTTP_201_CREATED)
+
 @api_view(['DELETE', 'POST'])
 def api_favorite(request, id):
     my_recipe = get_object_or_404(Recipe, id=id)
@@ -118,6 +131,30 @@ def api_subscriptions(request):
     paginator.page_size = 20
     result_page = paginator.paginate_queryset(entries, request)
     return paginator.get_paginated_response(result_page)
+
+@api_view(['GET'])
+# @permission_classes([AllowAny]) 
+def api_download_shopping_cart(request):
+    
+    cart = ShoppingCart.objects.filter(user=request.user)
+    # recipes = Recipe.objects.filter(is_in_shopping_cart=True)
+    ret = {} 
+    for entry in cart:
+        recipe = entry.recipe
+        recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+        for recipe_ingredient in recipe_ingredients:
+            if recipe_ingredient.ingredient.name in ret:
+                ret[recipe_ingredient.ingredient.name] += recipe_ingredient.amount
+            else:
+                ret[recipe_ingredient.ingredient.name] = recipe_ingredient.amount
+    pr = ""
+    for key, value in ret.items():
+        pr += f"{key}\t{value}\n"
+
+    # return Response(pr, status=204)
+    response = HttpResponse(pr, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="1.txt"'
+    return response
 
 
 @api_view(['POST', 'DELETE'])
