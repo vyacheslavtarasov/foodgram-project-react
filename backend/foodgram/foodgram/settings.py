@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'rest_framework.authtoken',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -79,10 +80,18 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 AUTH_USER_MODEL = 'api.CustomUser'
 
 DJOSER = {
-    'SERIALIZERS': {'user': 'api.serializers.UserSerializer',},
+    'HIDE_USERS': False,
+    'PERMISSIONS': {
+
+    'user_list': ['rest_framework.permissions.AllowAny'],
+
+    },
+    'SERIALIZERS': {'user': 'api.serializers.UserSerializer','current_user': 'api.serializers.UserSerializer',},
+
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
@@ -90,8 +99,8 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS":
-    "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10,
+    "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 2,
 }
 
 # Database
@@ -150,3 +159,6 @@ MEDIA_ROOT = "/media/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Длина логина пользователя
+LENG_LOGIN_USER = 11

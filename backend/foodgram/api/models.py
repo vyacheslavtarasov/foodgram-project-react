@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import RegexValidator
+
 
 
 class CustomUser(AbstractUser):
@@ -10,18 +12,25 @@ class CustomUser(AbstractUser):
         'Username',
         max_length=150,
         unique=True,
+        validators=[
+            RegexValidator(
+                regex='^[\w.@+-]+\Z',
+                message='This field must contain digits and characters including @/./+/-/_.',
+            ),
+        ]
     )
-    first_name = models.CharField(max_length=150, null=True)
-    last_name = models.CharField(max_length=150, null=True)
+    first_name = models.CharField(max_length=150, null=False, blank=False)
+    last_name = models.CharField(max_length=150, null=False, blank=False)
     email = models.EmailField(
-        blank=True,
+        blank=False,
         max_length=254,
         unique=True,
         verbose_name="email address",
+        null=False
     )
     password = models.CharField(
         "User password",
-        max_length=100, null=True
+        max_length=150, null=False, blank=False,
     )
 
     class Meta:
@@ -55,11 +64,25 @@ class Tag(models.Model):
     name = models.CharField(verbose_name="Tag", max_length=200)
     slug = models.SlugField(
         verbose_name="Slug of the tag name",
-        unique=True
+        unique=True,
+        null=True,
+        max_length=200,
+        validators=[
+            RegexValidator(
+                regex='^[-a-zA-Z0-9_]+$',
+                message='This field must represent a color in #XXXXXX format.',
+            ),
+        ]
     )
     color = models.CharField(max_length=16,
         verbose_name="Color",
-        unique=True
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex='^#(?:[0-9a-fA-F]{3}){1,2}$',
+                message='This field must represent a color in #XXXXXX format.',
+            ),
+        ]
     )
 
     class Meta:
@@ -110,6 +133,7 @@ class RecipeTag(models.Model):
     class Meta:
         verbose_name = "Recipe Tag"
         verbose_name_plural = "Recipe's Tags"
+        unique_together = (("recipe", "tag"),)
         ordering = ["id"]
 
     def __str__(self):
@@ -124,6 +148,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = "Recipe Ingredient"
         verbose_name_plural = "Recipe's Ingredients"
+        unique_together = (("recipe", "ingredient"),)
         ordering = ["id"]
 
     def __str__(self):
@@ -145,6 +170,7 @@ class Favorite(models.Model):
     class Meta:
         verbose_name = "Favorite"
         verbose_name_plural = "Favorites"
+        unique_together = (("user", "recipe"),)
         ordering = ["id"]
 
     def __str__(self):
@@ -165,6 +191,7 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = "Shopping Cart"
         verbose_name_plural = "Shopping Carts"
+        unique_together = (("user", "recipe"),)
         ordering = ["id"]
 
     def __str__(self):
@@ -184,6 +211,7 @@ class Subscribe(models.Model):
     class Meta:
         verbose_name = "Subscribe"
         verbose_name_plural = "Subscriptions"
+        unique_together = (("user", "user_subscribed_on"),)
         ordering = ["id"]
 
     def __str__(self):
