@@ -45,6 +45,7 @@ class RecipeAdmin(admin.ModelAdmin):
     """
 
     list_display = (
+        "id",
         "name",
         "author",
         "text",
