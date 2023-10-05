@@ -22,6 +22,7 @@ from django.shortcuts import get_object_or_404
 from api.models import Ingredient, Tag, Recipe, CustomUser, Favorite, Subscribe, ShoppingCart, RecipeIngredient
 from rest_framework import filters, mixins, permissions, status, viewsets
 
+
 class TagViewSet(
     # viewsets.ModelViewSet,
     # mixins.CreateModelMixin,
