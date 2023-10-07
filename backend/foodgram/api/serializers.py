@@ -87,7 +87,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     class Meta:
         model = Recipe
-        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredients", "image", "is_favorited", "is_in_shopping_cart")
+        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredients", "image", "image_url", "is_favorited", "is_in_shopping_cart")
     
     def get_image_url(self, obj):
         if obj.image:
