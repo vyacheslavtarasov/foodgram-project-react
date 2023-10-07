@@ -64,6 +64,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
 
+    image_url = serializers.SerializerMethodField(
+        'get_image_url',
+        read_only=True,
+    )
+
     tags = TagSerializer(many=True, read_only=True)
     ingredients = serializers.SerializerMethodField(
         'get_ingredients_with_amount',
@@ -83,6 +88,11 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredients", "image", "is_favorited", "is_in_shopping_cart")
+    
+    def get_image_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None
 
     def get_ingredients_with_amount(self, obj):
         ret = []
