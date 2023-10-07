@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = ("name", "measurement_name")
+        fields = ("id", "name", "measurement_name")
 
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
@@ -65,7 +65,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
 
     tags = TagSerializer(many=True, read_only=True)
-    ingredient = serializers.SerializerMethodField(
+    ingredients = serializers.SerializerMethodField(
         'get_ingredients_with_amount',
         read_only=True,
     )
@@ -82,7 +82,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     class Meta:
         model = Recipe
-        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredient", "image", "is_favorited", "is_in_shopping_cart")
+        fields = ("id", "name", "text", "cooking_time", "tags", "author", "ingredients", "image", "is_favorited", "is_in_shopping_cart")
 
     def get_ingredients_with_amount(self, obj):
         ret = []

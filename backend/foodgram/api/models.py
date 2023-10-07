@@ -52,6 +52,7 @@ class Ingredient(models.Model):
 
     class Meta:
         verbose_name = "Ingredient"
+        unique_together = (("name", "measurement_name"),)
         verbose_name_plural = "Ingredients"
         ordering = ["id"]
 
