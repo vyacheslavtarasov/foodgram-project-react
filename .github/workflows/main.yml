@@ -44,14 +44,13 @@ jobs:
           tags: aihal21/foodgram_frontend:latest
   deploy:
     runs-on: ubuntu-latest
-    if: github.ref_name == 'main'
     needs: 
       - build_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - name: Copy docker-compose.yml via ssh
+    - name: Copy docker-compose.prod.yml via ssh
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
