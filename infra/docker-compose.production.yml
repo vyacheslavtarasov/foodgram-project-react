@@ -27,7 +27,6 @@ services:
       - DB_NAME=foodgram
       - DB_HOST=db
       - DB_PORT=5432
-    command: printenv
     volumes:
       - static:/backend_static
       - media:/media/
