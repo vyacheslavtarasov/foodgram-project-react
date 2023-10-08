@@ -14,30 +14,24 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 load_dotenv()
 
-# SECRET_KEY = os.getenv(
-#     "SECRET_KEY",
-#     "django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$",
-# )
-
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-
-
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-330l44+jj=qx@=morgj(&3+)-aewuczbrl$j$=&)d1^jx#vtye"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$",
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECRET_KEY = (
+#     "django-insecure-330l44+jj=qx@=morgj(&3+)-aewuczbrl$j$=&)d1^jx#vtye"
+# )
+
+
 DEBUG = False
+# DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
-# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
+# ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
