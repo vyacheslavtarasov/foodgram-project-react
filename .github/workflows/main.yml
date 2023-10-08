@@ -69,6 +69,7 @@ jobs:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         script: |
           cd foodgram/infra
+          printenv
           sudo docker compose -f docker-compose.production.yml pull
           sudo docker compose -f docker-compose.production.yml down -v
           sudo docker compose -f docker-compose.production.yml up -d
