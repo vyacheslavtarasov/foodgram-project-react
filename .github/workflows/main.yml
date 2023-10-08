@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        envs: POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT
+        envs: POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT,HOST_VAR
         script: |
           cd foodgram/infra
           printenv
