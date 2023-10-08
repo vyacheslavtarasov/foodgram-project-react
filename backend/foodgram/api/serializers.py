@@ -4,17 +4,9 @@ from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from api.models import (
-    CustomUser,
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    RecipeTag,
-    ShoppingCart,
-    Subscribe,
-    Tag,
-)
+from api.models import (CustomUser, Favorite, Ingredient, Recipe,
+                        RecipeIngredient, RecipeTag, ShoppingCart, Subscribe,
+                        Tag)
 
 
 class UserSerializer(serializers.ModelSerializer):

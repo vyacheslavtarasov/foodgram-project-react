@@ -7,21 +7,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.models import (
-    CustomUser,
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Subscribe,
-    Tag,
-)
-from api.serializers import (
-    IngredientSerializer,
-    RecipeSerializer,
-    TagSerializer,
-)
+from api.models import (CustomUser, Favorite, Ingredient, Recipe,
+                        RecipeIngredient, ShoppingCart, Subscribe, Tag)
+from api.serializers import (IngredientSerializer, RecipeSerializer,
+                             TagSerializer)
 
 from .filters import RecipeFilter
 from .permissions import RecipePermissions

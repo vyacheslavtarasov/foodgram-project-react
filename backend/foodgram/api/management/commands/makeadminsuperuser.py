@@ -1,9 +1,7 @@
 import os
 
-from dotenv import load_dotenv
-
-
 from django.core.management.base import BaseCommand
+from dotenv import load_dotenv
 
 from api.models import CustomUser
 
