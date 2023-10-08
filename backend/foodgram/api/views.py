@@ -17,10 +17,7 @@ from .permissions import RecipePermissions
 
 
 class TagViewSet(
-    # viewsets.ModelViewSet,
-    # mixins.CreateModelMixin,
     mixins.ListModelMixin,
-    # mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -32,16 +29,11 @@ class TagViewSet(
     permission_classes = [AllowAny]
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    # permission_classes = (IsAdminOrReadOnly,)
-    # filter_backends = (SearchFilter,)
-    # search_fields = ("name",)
     lookup_field = "id"
 
 
 class IngredientViewSet(
-    # mixins.CreateModelMixin,
     mixins.ListModelMixin,
-    # mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -63,25 +55,15 @@ class IngredientViewSet(
 
 class RecipeViewSet(
     viewsets.ModelViewSet,
-    # viewsets.GenericViewSet,
-    # mixins.CreateModelMixin,
-    # mixins.UpdateModelMixin,
-    # mixins.ListModelMixin,
-    # mixins.RetrieveModelMixin,
-    # mixins.DestroyModelMixin,
-    # viewsets.GenericViewSet,
 ):
 
     """
     Получить список всех категорий.
     """
 
-    # permission_classes = [AllowAny]
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    # pagination_class = PageNumberPagination
     permission_classes = [RecipePermissions]
-    # filter_backends = (SearchFilter,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
