@@ -83,6 +83,7 @@ jobs:
           echo "docker-compose.production.yml complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           echo "static collected"
+          psudo docker compose -f docker-compose.production.yml exec backend python manage.py wait_for_db
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           echo "migrations complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py dbdataimport
