@@ -9,7 +9,7 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=foodgram_user
       - POSTGRES_PASSWORD=foodgram_password
       - DB_NAME=foodgram
@@ -21,7 +21,7 @@ services:
   backend:
     image: aihal21/foodgram_backend
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=foodgram_user
       - POSTGRES_PASSWORD=foodgram_password
       - DB_NAME=foodgram
@@ -33,7 +33,7 @@ services:
 
   frontend:
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=foodgram_user
       - POSTGRES_PASSWORD=foodgram_password
       - DB_NAME=foodgram
@@ -46,7 +46,7 @@ services:
   nginx:
     image: nginx:1.19.3
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=foodgram_user
       - POSTGRES_PASSWORD=foodgram_password
       - DB_NAME=foodgram
