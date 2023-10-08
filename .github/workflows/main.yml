@@ -61,12 +61,14 @@ jobs:
         target: "foodgram"
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
+      env: 
+        FOO: ${{ secrets.POSTGRES_DB }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        envs: FOO
         script: |
           cd foodgram/infra
           printenv
