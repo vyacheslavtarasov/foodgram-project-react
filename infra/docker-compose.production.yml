@@ -27,6 +27,7 @@ services:
       - DB_NAME
       - DB_HOST
       - DB_PORT
+    command: printenv
     volumes:
       - static:/backend_static
       - media:/media/
