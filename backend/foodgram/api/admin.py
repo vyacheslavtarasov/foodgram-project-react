@@ -1,9 +1,8 @@
 from django.contrib import admin
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
 
+from .models import (CustomUser, Favorite, Ingredient, Recipe,
+                     RecipeIngredient, RecipeTag, ShoppingCart, Subscribe, Tag)
 
-from .models import CustomUser, Ingredient, Favorite, Subscribe, Tag, Recipe, RecipeTag, RecipeIngredient, ShoppingCart
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -17,21 +16,18 @@ class CustomUserAdmin(admin.ModelAdmin):
     )
     search_fields = ["email", "username"]
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    """Reisters model Tag
-    """
+    """Reisters model Tag"""
 
-    list_display = (
-        "name",
-        "measurement_name"
-    )
+    list_display = ("name", "measurement_name")
     search_fields = ["name"]
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    """Reisters model Tag
-    """
+    """Reisters model Tag"""
 
     list_display = (
         "name",
@@ -39,72 +35,48 @@ class TagAdmin(admin.ModelAdmin):
         "color",
     )
 
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    """Reisters model Recipe
-    """
+    """Reisters model Recipe"""
 
-    list_display = (
-        "id",
-        "name",
-        "author",
-        "text",
-        "cooking_time"
-    )
-    search_fields = ['name', "author__username", "tags__name"]
+    list_display = ("id", "name", "author", "text", "cooking_time")
+    search_fields = ["name", "author__username", "tags__name"]
+
 
 @admin.register(RecipeTag)
 class RecipeTagAdmin(admin.ModelAdmin):
-    """Reisters model RecipeTag
-    """
+    """Reisters model RecipeTag"""
 
     list_display = (
         "recipe",
         "tag",
-        
     )
+
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    """Reisters model RecipeIngredient
-    """
+    """Reisters model RecipeIngredient"""
 
-    list_display = (
-        "recipe",
-        "ingredient",
-        "amount"
-        
-    )
+    list_display = ("recipe", "ingredient", "amount")
+
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    """Favorite model
-    """
+    """Favorite model"""
 
-    list_display = (
-        "recipe",
-        "user"
-        
-    )
+    list_display = ("recipe", "user")
+
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
-    """ShoppingCart model
-    """
+    """ShoppingCart model"""
 
-    list_display = (
-        "recipe",
-        "user"
-        
-    )
+    list_display = ("recipe", "user")
+
 
 @admin.register(Subscribe)
 class SubscribeAdmin(admin.ModelAdmin):
-    """Subscribe model
-    """
+    """Subscribe model"""
 
-    list_display = (
-        "user",
-        "user_subscribed_on"
-        
-    )
+    list_display = ("user", "user_subscribed_on")

@@ -1,23 +1,21 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.core.validators import RegexValidator
-
+from django.db import models
 
 
 class CustomUser(AbstractUser):
     """Custom User model"""
 
     username = models.CharField(
-        'Username',
+        "Username",
         max_length=150,
         unique=True,
         validators=[
             RegexValidator(
-                regex='^[\w.@+-]+\Z',
-                message='This field must contain digits and characters including @/./+/-/_.',
+                regex="^[\w.@+-]+\Z",
+                message="This field must contain digits and characters including @/./+/-/_.",
             ),
-        ]
+        ],
     )
     first_name = models.CharField(max_length=150, null=False, blank=False)
     last_name = models.CharField(max_length=150, null=False, blank=False)
@@ -26,11 +24,13 @@ class CustomUser(AbstractUser):
         max_length=254,
         unique=True,
         verbose_name="email address",
-        null=False
+        null=False,
     )
     password = models.CharField(
         "User password",
-        max_length=150, null=False, blank=False,
+        max_length=150,
+        null=False,
+        blank=False,
     )
 
     class Meta:
@@ -44,11 +44,14 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return str(self.username)
 
+
 class Ingredient(models.Model):
     """Ingredient model"""
 
     name = models.CharField(verbose_name="Ingredient name", max_length=200)
-    measurement_name = models.CharField(verbose_name="Unit of measure", max_length=200)
+    measurement_name = models.CharField(
+        verbose_name="Unit of measure", max_length=200
+    )
 
     class Meta:
         verbose_name = "Ingredient"
@@ -58,7 +61,8 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Tag(models.Model):
     """Tag"""
 
@@ -70,20 +74,21 @@ class Tag(models.Model):
         max_length=200,
         validators=[
             RegexValidator(
-                regex='^[-a-zA-Z0-9_]+$',
-                message='This field must represent a color in #XXXXXX format.',
+                regex="^[-a-zA-Z0-9_]+$",
+                message="This field must represent a color in #XXXXXX format.",
             ),
-        ]
+        ],
     )
-    color = models.CharField(max_length=16,
+    color = models.CharField(
+        max_length=16,
         verbose_name="Color",
         unique=True,
         validators=[
             RegexValidator(
-                regex='^#(?:[0-9a-fA-F]{3}){1,2}$',
-                message='This field must represent a color in #XXXXXX format.',
+                regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
+                message="This field must represent a color in #XXXXXX format.",
             ),
-        ]
+        ],
     )
 
     class Meta:
@@ -93,7 +98,8 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Recipe(models.Model):
     """Recipe model"""
 
@@ -102,18 +108,20 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, through="RecipeTag")
 
     author = models.ForeignKey(
-        CustomUser, related_name='recepies', null=True,
+        CustomUser,
+        related_name="recepies",
+        null=True,
         on_delete=models.SET_NULL,
-        verbose_name="Recipe author"
+        verbose_name="Recipe author",
     )
-    ingredients = models.ManyToManyField(Ingredient, through="RecipeIngredient")
+    ingredients = models.ManyToManyField(
+        Ingredient, through="RecipeIngredient"
+    )
     cooking_time = models.IntegerField()
     is_favorited = models.BooleanField()
     is_in_shopping_cart = models.BooleanField()
     image = models.ImageField(
-        upload_to='recipes/images/',
-        null=True,
-        default=None
+        upload_to="recipes/images/", null=True, default=None
     )
 
     class Meta:
@@ -123,10 +131,10 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class RecipeTag(models.Model):
     """RecipeTag model"""
-
 
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
@@ -138,10 +146,12 @@ class RecipeTag(models.Model):
         ordering = ["id"]
 
     def __str__(self):
-        return f'{self.recipe} {self.tag}'
+        return f"{self.recipe} {self.tag}"
+
 
 class RecipeIngredient(models.Model):
     """RecipeIngredient model"""
+
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.IntegerField()
@@ -153,19 +163,20 @@ class RecipeIngredient(models.Model):
         ordering = ["id"]
 
     def __str__(self):
-        return f'{self.recipe} {self.ingredient}'
-    
+        return f"{self.recipe} {self.ingredient}"
+
+
 class Favorite(models.Model):
     """Favorite model"""
 
-
     user = models.ForeignKey(
-        CustomUser, related_name='custom_users', null=True,
-        on_delete=models.SET_NULL
+        CustomUser,
+        related_name="custom_users",
+        null=True,
+        on_delete=models.SET_NULL,
     )
     recipe = models.ForeignKey(
-        Recipe, related_name='recepies', null=True,
-        on_delete=models.SET_NULL
+        Recipe, related_name="recepies", null=True, on_delete=models.SET_NULL
     )
 
     class Meta:
@@ -175,18 +186,23 @@ class Favorite(models.Model):
         ordering = ["id"]
 
     def __str__(self):
-        return f'{self.user} {self.recipe}'
+        return f"{self.user} {self.recipe}"
+
 
 class ShoppingCart(models.Model):
     """ShoppingCart model"""
 
     user = models.ForeignKey(
-        CustomUser, related_name='shopping_cart_users', null=True,
-        on_delete=models.SET_NULL
+        CustomUser,
+        related_name="shopping_cart_users",
+        null=True,
+        on_delete=models.SET_NULL,
     )
     recipe = models.ForeignKey(
-        Recipe, related_name='shopping_cart_recipes', null=True,
-        on_delete=models.SET_NULL
+        Recipe,
+        related_name="shopping_cart_recipes",
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     class Meta:
@@ -196,17 +212,20 @@ class ShoppingCart(models.Model):
         ordering = ["id"]
 
     def __str__(self):
-        return f'{self.user} {self.recipe}'
+        return f"{self.user} {self.recipe}"
+
 
 class Subscribe(models.Model):
     """Subscribe model"""
+
     user = models.ForeignKey(
-        CustomUser, related_name='users', null=True,
-        on_delete=models.SET_NULL
+        CustomUser, related_name="users", null=True, on_delete=models.SET_NULL
     )
     user_subscribed_on = models.ForeignKey(
-        CustomUser, related_name='users_subscribed_on', null=True,
-        on_delete=models.SET_NULL
+        CustomUser,
+        related_name="users_subscribed_on",
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     class Meta:
@@ -216,4 +235,4 @@ class Subscribe(models.Model):
         ordering = ["id"]
 
     def __str__(self):
-        return f'{self.user} {self.user_subscribed_on}'
+        return f"{self.user} {self.user_subscribed_on}"
