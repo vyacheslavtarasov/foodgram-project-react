@@ -66,6 +66,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        POSTGRES_DB: ${{ secrects.POSTGRES_DB }}
         script: |
           cd foodgram/infra
           sudo docker compose -f docker-compose.production.yml pull
