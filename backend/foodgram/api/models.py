@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
         unique=True,
         validators=[
             RegexValidator(
-                regex="^[\w.@+-]+\Z",
+                regex="^[\\w.@+-]+\\Z",
                 message=(
                     "This field must contain digits and characters including"
                     " @/./+/-/_."

@@ -62,13 +62,18 @@ jobs:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       env: 
-        FOO: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        envs: FOO
+        envs: POSTGRES_DB,POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT
         script: |
           cd foodgram/infra
           printenv

@@ -1,5 +1,3 @@
-import logging
-
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
@@ -10,7 +8,6 @@ from rest_framework.response import Response
 from .filters import RecipeFilter
 from .permissions import RecipePermissions
 
-logger = logging.getLogger(__name__)
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, viewsets
 
