@@ -13,7 +13,10 @@ class CustomUser(AbstractUser):
         validators=[
             RegexValidator(
                 regex="^[\w.@+-]+\Z",
-                message="This field must contain digits and characters including @/./+/-/_.",
+                message=(
+                    "This field must contain digits and characters including"
+                    " @/./+/-/_."
+                ),
             ),
         ],
     )
@@ -75,7 +78,9 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex="^[-a-zA-Z0-9_]+$",
-                message="This field must represent a color in #XXXXXX format.",
+                message=(
+                    "This field must represent a color in #XXXXXX format."
+                ),
             ),
         ],
     )
@@ -86,7 +91,9 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
-                message="This field must represent a color in #XXXXXX format.",
+                message=(
+                    "This field must represent a color in #XXXXXX format."
+                ),
             ),
         ],
     )

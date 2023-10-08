@@ -49,7 +49,10 @@ class Migration(migrations.Migration):
                 unique=True,
                 validators=[
                     django.core.validators.RegexValidator(
-                        message="This field must contain digits and characters including @/./+/-/_.",
+                        message=(
+                            "This field must contain digits and characters"
+                            " including @/./+/-/_."
+                        ),
                         regex="^[\\w.@+-]+\\Z",
                     )
                 ],
@@ -64,7 +67,10 @@ class Migration(migrations.Migration):
                 unique=True,
                 validators=[
                     django.core.validators.RegexValidator(
-                        message="This field must represent a color in #XXXXXX format.",
+                        message=(
+                            "This field must represent a color in #XXXXXX"
+                            " format."
+                        ),
                         regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
                     )
                 ],
@@ -80,7 +86,10 @@ class Migration(migrations.Migration):
                 unique=True,
                 validators=[
                     django.core.validators.RegexValidator(
-                        message="This field must represent a color in #XXXXXX format.",
+                        message=(
+                            "This field must represent a color in #XXXXXX"
+                            " format."
+                        ),
                         regex="^[-a-zA-Z0-9_]+$",
                     )
                 ],

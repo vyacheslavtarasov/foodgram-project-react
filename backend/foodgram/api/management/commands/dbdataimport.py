@@ -54,7 +54,8 @@ class Command(BaseCommand):
 
         for d in dictionary_list:
             cursor.execute(
-                "INSERT INTO api_ingredient (name, measurement_name) VALUES (%s, %s)",
+                "INSERT INTO api_ingredient (name, measurement_name) VALUES"
+                " (%s, %s)",
                 (d["name"], d["measurement_unit"]),
             )
 

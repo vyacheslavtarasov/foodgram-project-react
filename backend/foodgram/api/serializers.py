@@ -8,8 +8,6 @@ from api.models import (CustomUser, Favorite, Ingredient, Recipe,
                         RecipeIngredient, RecipeTag, ShoppingCart, Subscribe,
                         Tag)
 
-from .validators import UsernameValidatorRegex
-
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
