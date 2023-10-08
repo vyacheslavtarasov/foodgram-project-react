@@ -78,7 +78,7 @@ jobs:
           printenv
           sudo docker compose -f docker-compose.production.yml pull
           sudo docker compose -f docker-compose.production.yml down -v
-          sudo POSTGRES_DB=${{ secrets.POSTGRES_DB }} docker compose -f docker-compose.production.yml up -d
+          sudo POSTGRES_DB="foodgram" docker compose -f docker-compose.production.yml up -d
           echo "docker-compose.production.yml complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           echo "static collected"
