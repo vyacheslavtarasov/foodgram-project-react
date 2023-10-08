@@ -57,34 +57,23 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        source: "infra/docker-compose.production.yml,infra/nginx.conf"
+        source: "infra/docker-compose.production.yml,infra/nginx.conf,infra/.env"
         target: "foodgram"
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
-      env: 
-        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        HOST_VAR: foodgram
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        envs: POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT,HOST_VAR
         script: |
           cd foodgram/infra
-          printenv
           sudo docker compose -f docker-compose.production.yml pull
           sudo docker compose -f docker-compose.production.yml down -v
           sudo docker compose -f docker-compose.production.yml up -d
           echo "docker-compose.production.yml complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-          echo "static collected"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-          echo "migrations complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py dbdataimport
-          echo "data imported"
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py makeadminsuperuser
         

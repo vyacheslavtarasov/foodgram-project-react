@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
+
 # from rest_framework import pagination
 
 
@@ -22,7 +24,7 @@ load_dotenv()
 
 # DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
@@ -33,7 +35,7 @@ SECRET_KEY = (
 DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
-
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 # Application definition
 
@@ -139,8 +141,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME":
-            "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
         "NAME": (

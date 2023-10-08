@@ -8,50 +8,26 @@ volumes:
 services:
   db:
     image: postgres:13
-    environment:
-      - POSTGRES_DB=$HOST_VAR
-      - POSTGRES_USER=foodgram_user
-      - POSTGRES_PASSWORD=foodgram_password
-      - DB_NAME=foodgram
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   backend:
     image: aihal21/foodgram_backend
-    environment:
-      - POSTGRES_DB=$HOST_VAR
-      - POSTGRES_USER=foodgram_user
-      - POSTGRES_PASSWORD=foodgram_password
-      - DB_NAME=foodgram
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file: .env
     volumes:
       - static:/backend_static
       - media:/media/
 
   frontend:
-    environment:
-      - POSTGRES_DB=$HOST_VAR
-      - POSTGRES_USER=foodgram_user
-      - POSTGRES_PASSWORD=foodgram_password
-      - DB_NAME=foodgram
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file: .env
     image: aihal21/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
 
   nginx:
     image: nginx:1.19.3
-    environment:
-      - POSTGRES_DB=$HOST_VAR
-      - POSTGRES_USER=foodgram_user
-      - POSTGRES_PASSWORD=foodgram_password
-      - DB_NAME=foodgram
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file: .env
     ports:
       - 6000:80
     volumes:
