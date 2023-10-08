@@ -10,11 +10,11 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - POSTGRES_USER=foodgram_user
+      - POSTGRES_PASSWORD=foodgram_password
+      - DB_NAME=foodgram
+      - DB_HOST=db
+      - DB_PORT=5432
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -22,11 +22,11 @@ services:
     image: aihal21/foodgram_backend
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - POSTGRES_USER=foodgram_user
+      - POSTGRES_PASSWORD=foodgram_password
+      - DB_NAME=foodgram
+      - DB_HOST=db
+      - DB_PORT=5432
     volumes:
       - static:/backend_static
       - media:/media/
@@ -34,11 +34,11 @@ services:
   frontend:
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - POSTGRES_USER=foodgram_user
+      - POSTGRES_PASSWORD=foodgram_password
+      - DB_NAME=foodgram
+      - DB_HOST=db
+      - DB_PORT=5432
     image: aihal21/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
@@ -47,11 +47,11 @@ services:
     image: nginx:1.19.3
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - POSTGRES_USER=foodgram_user
+      - POSTGRES_PASSWORD=foodgram_password
+      - DB_NAME=foodgram
+      - DB_HOST=db
+      - DB_PORT=5432
     ports:
       - 6000:80
     volumes:

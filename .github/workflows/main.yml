@@ -62,7 +62,6 @@ jobs:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       env: 
-        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         DB_NAME: ${{ secrets.DB_NAME }}
@@ -73,13 +72,13 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        envs: POSTGRES_DB,POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT
+        envs: POSTGRES_USER,POSTGRES_PASSWORD,DB_NAME,DB_HOST,DB_PORT
         script: |
           cd foodgram/infra
           printenv
           sudo docker compose -f docker-compose.production.yml pull
           sudo docker compose -f docker-compose.production.yml down -v
-          sudo docker compose -f docker-compose.production.yml up -d
+          sudo POSTGRES_DB=${{ secrets.POSTGRES_DB }} docker compose -f docker-compose.production.yml up -d
           echo "docker-compose.production.yml complete"
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           echo "static collected"
