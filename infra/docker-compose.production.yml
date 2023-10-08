@@ -10,7 +10,7 @@ services:
     image: postgres:13
     env_file: .env
     environment:
-      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_DB=foodgram
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -18,7 +18,7 @@ services:
     image: aihal21/foodgram_backend
     env_file: .env
     environment:
-      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_DB=foodgram
     volumes:
       - static:/backend_static
       - media:/media/
@@ -26,7 +26,7 @@ services:
   frontend:
     env_file: .env
     environment:
-      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_DB=foodgram
     image: aihal21/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
@@ -35,7 +35,7 @@ services:
     image: nginx:1.19.3
     env_file: .env
     environment:
-      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_DB=foodgram
     ports:
       - 6000:80
     volumes:
