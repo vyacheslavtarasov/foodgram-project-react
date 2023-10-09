@@ -29,7 +29,7 @@ https://docs.docker.com/desktop/
 Запустите процесс-сервис платформы Docker:
 ```
 Для Linux - sudo systemctl start docker
-Для Windows - запустить приложение Docker из места установки
+Для Windows - запустите приложение Docker из места установки
 ```
 Клонируйте репозиторий.
 ```
@@ -73,7 +73,7 @@ python3 manage.py makeadminsuperuser
 ```
 git clone git@github.com:vyacheslavtarasov/foodgram-project-react.git
 ```
-Перейти в папку проекта backend.
+Перейти в папку проекта backend.  
 Cоздать виртуальное окружение.
 ```
 python3 -m venv env
@@ -103,14 +103,14 @@ API будет доступа по адресу http://localhost:9000/
 
 
 ## Поддержка развёрнутого в интеренете проекта.
-Сайт и API развёрнуты и доступен в интернете по адресу https://practicum16aihal21.ddns.net/
+Сайт и API развёрнуты и доступны в интернете по адресу https://practicum16aihal21.ddns.net/  
 Для осуществления поддержки развёрнутого со своей машины необходимо:  
 Склонировать репозиторий на свой аккаунт GitHub  
 ```
 https://github.com/vyacheslavtarasov/foodgram-project-react
 ```
-Заполнить секретные переменные (foodgram-project-react/settings/secrets/actions) на сайте github в своём склонированном репозитории.
-Параметры докер репозитория:  
+Заполнить секретные переменные (foodgram-project-react/settings/secrets/actions) на сайте github в своём склонированном репозитории.  
+Имена переменных докер репозитория, которые нужно заполнить:  
 ``` 
 - secrets.DOCKER_USERNAME
 - secrets.DOCKER_PASSWORD
@@ -120,7 +120,7 @@ https://github.com/vyacheslavtarasov/foodgram-project-react
 - secrets.SSH_KEY
 - secrets.SSH_PASSPHRASE
 ```
-Клонировать репозиторий.foodgram-project-react/settings/secrets/actions
+Клонировать репозиторий.
 ```
 git clone git@github.com:vyacheslavtarasov/foodgram-project-react.git
 ```
