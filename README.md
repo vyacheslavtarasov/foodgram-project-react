@@ -22,7 +22,7 @@
 
 
 ## Локальный запуск сайта
-Установить платформу Docker (c wsl2.0 для Windos) с сайта:
+Установить платформу Docker (c wsl2.0 для Windows) с сайта:
 ```
 https://docs.docker.com/desktop/
 ```
