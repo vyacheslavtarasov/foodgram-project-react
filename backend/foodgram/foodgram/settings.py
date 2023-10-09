@@ -3,15 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# from rest_framework import pagination
 
-
-# class StandardResultsSetPag(rest_framework.pagination.PageNumberPagination):
-#     page_size = 3
-#     page_size_query_param = 'limit'
-#     max_page_size = 10
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -21,17 +13,9 @@ SECRET_KEY = os.getenv(
     "django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$",
 )
 
-# SECRET_KEY = (
-#     "django-insecure-330l44+jj=qx@=morgj(&3+)-aewuczbrl$j$=&)d1^jx#vtye"
-# )
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-
-DEBUG = False
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-
-# ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
-
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -103,13 +87,10 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": (
-        "rest_framework.pagination.PageNumberPagination"
+        "api.paginations.CustomPagination"
     ),
     "PAGE_SIZE": 2,
 }
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # DATABASES = {
 #     'default': {
@@ -128,7 +109,6 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", 5432),
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -154,10 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -168,25 +144,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-# STATIC_URL = '/static/'
-
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = "/media/"
-
 STATIC_URL = "/backend_static/"
 STATIC_ROOT = "/backend_static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/media/"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Длина логина пользователя
 LENG_LOGIN_USER = 11
