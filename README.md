@@ -50,6 +50,7 @@ docker-compose up
 
 ## Разработка и тестирование API
 Разработку и тестирование API удобно осуществлять не в докер контейнере, а локально, использую встроенный сервер Django.   
+Для этого надо.   
 Клонировать репозиторий.
 ```
 git clone git@github.com:vyacheslavtarasov/foodgram-project-react.git
@@ -80,7 +81,35 @@ python manage.py dbdataimport
 ```
 python manage.py runserver
 ```
-Сайт будет доступен по адресу http://localhost:9000/  
+API будет доступа по адресу http://localhost:9000/  
+
+
+## Поддержка развёрнутого в интеренете проекта.
+Сайт и API развёрнуты и доступен в интернете по адресу https://practicum16aihal21.ddns.net/
+Для осуществления поддержки развёрнутого со своей машины необходимо:  
+Склонировать репозиторий на свой аккаунт GitHub  
+```
+https://github.com/vyacheslavtarasov/foodgram-project-react
+```
+Заполнить секретные переменные (foodgram-project-react/settings/secrets/actions) на сайте github в своём склонированном репозитории.
+Параметры докер репозитория:  
+``` 
+- secrets.DOCKER_USERNAME
+- secrets.DOCKER_PASSWORD
+Параметры доступа к серверу:  
+- secrets.HOST
+- secrets.USER
+- secrets.SSH_KEY
+- secrets.SSH_PASSPHRASE
+```
+Клонировать репозиторий.foodgram-project-react/settings/secrets/actions
+```
+git clone git@github.com:vyacheslavtarasov/foodgram-project-react.git
+```
+Внести необходимые правки, проверить их локально любым удобным способом.   
+Залить обратно в репозиторий git.
+
+
 
 ## Алгоритм регистрации пользователей
 
