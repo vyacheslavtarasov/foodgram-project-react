@@ -13,6 +13,8 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
+    depends_on:
+      - frontend
     image: aihal21/foodgram_backend
     env_file: .env
     volumes:
@@ -20,12 +22,16 @@ services:
       - media:/media/
 
   frontend:
+    depends_on:
+      - nginx
     env_file: .env
     image: aihal21/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
 
   nginx:
+    depends_on:
+      - db
     image: nginx:1.19.3
     env_file: .env
     ports:
