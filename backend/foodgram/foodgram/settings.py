@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv(
 DEBUG = False
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-# ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost", "51.250.104.138"]
+# ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
