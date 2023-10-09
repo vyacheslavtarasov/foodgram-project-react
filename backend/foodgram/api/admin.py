@@ -40,9 +40,17 @@ class TagAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     """Reisters model Recipe"""
 
-    list_display = ("id", "name", "author", "text", "cooking_time")
+    list_display = ("id", "name", "author", "text", "cooking_time", "tag", "favorited")
     search_fields = ["name", "author__username", "tags__name"]
 
+    def favorited(self, obj):
+        return Favorite.objects.filter(recipe=obj).count()
+    
+    def tag(self, obj):
+        ret = []
+        for val in RecipeTag.objects.filter(recipe=obj):
+            ret.append(val.tag)
+        return ret
 
 @admin.register(RecipeTag)
 class RecipeTagAdmin(admin.ModelAdmin):
