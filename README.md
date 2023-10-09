@@ -49,6 +49,10 @@ docker exec -it infra-backend-1 bash
 ```
 python3 manage.py migrate
 ```
+Соберите статику приложения для отображения через nginx сервер.
+```
+python manage.py collectstatic
+```
 Загрузите начальные данные в базу.
 ```
 python manage.py dbdataimport
