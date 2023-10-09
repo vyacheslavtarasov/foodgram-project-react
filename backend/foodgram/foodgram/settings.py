@@ -16,8 +16,8 @@ SECRET_KEY = os.getenv(
 # SECRET_KEY = ("django-insecure-"
 #               "cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$")
 
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = False
+DEBUG = os.getenv("DEBUG", "False") == "True"
+# DEBUG = False
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 # ALLOWED_HOSTS = ["127.0.0.1", "practicum16aihal21.ddns.net", "localhost"]
@@ -97,13 +97,6 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 2,
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -114,6 +107,13 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", 5433),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
