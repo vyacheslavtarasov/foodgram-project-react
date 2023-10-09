@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='recipe',
             options={'ordering': ['-id'], 'verbose_name': 'Recipe',
-                      'verbose_name_plural': 'Recipes'},
+                     'verbose_name_plural': 'Recipes'},
         ),
     ]
