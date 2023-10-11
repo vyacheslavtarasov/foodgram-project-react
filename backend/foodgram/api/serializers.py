@@ -34,7 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
                 user=self.context["request"].user, user_subscribed_on=obj).exists()
 
 
-
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
@@ -75,10 +74,14 @@ class FavoriteSerializer(serializers.ModelSerializer):
         model = Favorite
         fields = "__all__"
 
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingCart
+        fields = "__all__"
 
 class SubscribeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Favorite
+        model = Subscribe
         fields = "__all__"
 
 
