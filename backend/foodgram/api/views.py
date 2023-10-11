@@ -13,7 +13,7 @@ from api.serializers import (IngredientSerializer, RecipeSerializer,
                              TagSerializer)
 
 from .filters import RecipeFilter
-from .permissions import RecipePermissions
+from .permissions import Browse4AllEdit4Author
 
 
 class TagViewSet(
@@ -63,7 +63,7 @@ class RecipeViewSet(
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [RecipePermissions]
+    permission_classes = [Browse4AllEdit4Author]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 

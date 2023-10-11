@@ -1,16 +1,7 @@
 import json
-import os
 
-import psycopg2
 from django.core.management.base import BaseCommand
-from dotenv import load_dotenv
-
-load_dotenv()
-database = os.getenv("POSTGRES_DB", "django")
-user = os.getenv("POSTGRES_USER", "django")
-password = os.getenv("POSTGRES_PASSWORD", "")
-host = os.getenv("DB_HOST", "")
-port = os.getenv("DB_PORT", "5432")
+from api.models import (Ingredient, Tag)
 
 tag_data = [
     ["завтрак", "breakfast", "#111111"],
@@ -27,45 +18,20 @@ class Command(BaseCommand):
             "Ready to import data for 'Ingredient' and 'Tag' tables."
         )
 
-        conn = psycopg2.connect(
-            database=database,
-            user=user,
-            password=password,
-            host=host,
-            port=int(port),
-        )
-
-        conn.autocommit = True
-        cursor = conn.cursor()
-
-        sql = """ DELETE FROM api_ingredient;"""
-
-        cursor.execute(sql)
-
-        sql = """ DELETE FROM api_tag;"""
-
-        cursor.execute(sql)
-
         dictionary_list = []
         with open(
             "/app/foodgram/data/ingredients.json", encoding="utf-8"
         ) as json_file:
             dictionary_list = json.load(json_file)
+        
+        Ingredient.objects.all().delete()
 
-        for d in dictionary_list:
-            cursor.execute(
-                "INSERT INTO api_ingredient (name, measurement_name) VALUES"
-                " (%s, %s)",
-                (d["name"], d["measurement_unit"]),
-            )
+        ingredient_list = [Ingredient(name=d["name"], measurement_name=d["measurement_unit"]) for d in dictionary_list]
 
+        Ingredient.objects.bulk_create(ingredient_list)
+
+        Tag.objects.all().delete()
         for data in tag_data:
-            cursor.execute(
-                "INSERT INTO api_tag (name, slug, color) VALUES (%s, %s, %s)",
-                (data[0], data[1], data[2]),
-            )
-
-        conn.commit()
-        conn.close()
+            Tag.objects.get_or_create(name=data[0], slug=data[1], color=data[2])
 
         self.stdout.write("Import Complete!")

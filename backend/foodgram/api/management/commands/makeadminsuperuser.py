@@ -7,12 +7,6 @@ from api.models import CustomUser
 
 load_dotenv()
 
-database = os.getenv("POSTGRES_DB", "django")
-user = os.getenv("POSTGRES_USER", "django")
-password = os.getenv("POSTGRES_PASSWORD", "")
-host = os.getenv("DB_HOST", "")
-port = os.getenv("DB_PORT", "5432")
-
 
 def createSuperUser(username, password, email="", firstName="", lastName=""):
     invalidInputs = ["", None]

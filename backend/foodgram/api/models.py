@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db import models
+
+from foodgram.constans import ModelsConstants
 
 
 class CustomUser(AbstractUser):
@@ -8,7 +10,7 @@ class CustomUser(AbstractUser):
 
     username = models.CharField(
         "Username",
-        max_length=150,
+        max_length=ModelsConstants.NAME_LENGTH.value,
         unique=True,
         validators=[
             RegexValidator(
@@ -20,18 +22,18 @@ class CustomUser(AbstractUser):
             ),
         ],
     )
-    first_name = models.CharField(max_length=150, null=False, blank=False)
-    last_name = models.CharField(max_length=150, null=False, blank=False)
+    first_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
+    last_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
     email = models.EmailField(
         blank=False,
-        max_length=254,
+        max_length=ModelsConstants.EMAIL_LENGTH.value,
         unique=True,
         verbose_name="email address",
         null=False,
     )
     password = models.CharField(
         "User password",
-        max_length=150,
+        max_length=ModelsConstants.PASSWORD_LENGTH.value,
         null=False,
         blank=False,
     )
@@ -51,9 +53,9 @@ class CustomUser(AbstractUser):
 class Ingredient(models.Model):
     """Ingredient model"""
 
-    name = models.CharField(verbose_name="Ingredient name", max_length=200)
+    name = models.CharField(verbose_name="Ingredient name", max_length=ModelsConstants.NAME_LENGTH.value)
     measurement_name = models.CharField(
-        verbose_name="Unit of measure", max_length=200
+        verbose_name="Unit of measure", max_length=ModelsConstants.NAME_LENGTH.value
     )
 
     class Meta:
@@ -69,12 +71,12 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     """Tag"""
 
-    name = models.CharField(verbose_name="Tag", max_length=200)
+    name = models.CharField(verbose_name="Tag", max_length=ModelsConstants.NAME_LENGTH.value)
     slug = models.SlugField(
         verbose_name="Slug of the tag name",
         unique=True,
         null=True,
-        max_length=200,
+        max_length=ModelsConstants.SLUG_LENGTH.value,
         validators=[
             RegexValidator(
                 regex="^[-a-zA-Z0-9_]+$",
@@ -110,8 +112,8 @@ class Tag(models.Model):
 class Recipe(models.Model):
     """Recipe model"""
 
-    name = models.CharField(verbose_name="Recipe name", max_length=200)
-    text = models.CharField(verbose_name="Recipe description", max_length=200)
+    name = models.CharField(verbose_name="Recipe name", max_length=ModelsConstants.NAME_LENGTH.value)
+    text = models.CharField(verbose_name="Recipe description", max_length=ModelsConstants.TEXT_SMALL.value)
     tags = models.ManyToManyField(Tag, through="RecipeTag")
 
     author = models.ForeignKey(
@@ -124,7 +126,8 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient, through="RecipeIngredient"
     )
-    cooking_time = models.IntegerField()
+    cooking_time = models.SmallIntegerField(validators=[MinValueValidator(ModelsConstants.COOCKING_TIME_MIN_VALUE.value),
+                                       MaxValueValidator(ModelsConstants.COOCKING_TIME_MAX_VALE.value)])
     is_favorited = models.BooleanField()
     is_in_shopping_cart = models.BooleanField()
     image = models.ImageField(
@@ -161,7 +164,8 @@ class RecipeIngredient(models.Model):
 
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    amount = models.IntegerField()
+    amount = models.SmallIntegerField(validators=[MinValueValidator(ModelsConstants.INGREDIENT_MIN_AMOUNT.value),
+                                       MaxValueValidator(ModelsConstants.INGREDIENT_MAX_AMOUNT.value)])
 
     class Meta:
         verbose_name = "Recipe Ingredient"
@@ -172,51 +176,67 @@ class RecipeIngredient(models.Model):
     def __str__(self):
         return f"{self.recipe} {self.ingredient}"
 
-
-class Favorite(models.Model):
-    """Favorite model"""
-
+class AbstractModel(models.Model):
     user = models.ForeignKey(
         CustomUser,
-        related_name="custom_users",
         null=True,
         on_delete=models.SET_NULL,
     )
     recipe = models.ForeignKey(
-        Recipe, related_name="recepies", null=True, on_delete=models.SET_NULL
+        Recipe, null=True, on_delete=models.SET_NULL
     )
 
     class Meta:
-        verbose_name = "Favorite"
-        verbose_name_plural = "Favorites"
+        abstract = True
         unique_together = (("user", "recipe"),)
         ordering = ["id"]
+
+class Favorite(AbstractModel):
+    """Favorite model"""
+
+    # user = models.ForeignKey(
+    #     CustomUser,
+    #     related_name="custom_users",
+    #     null=True,
+    #     on_delete=models.SET_NULL,
+    # )
+    # recipe = models.ForeignKey(
+    #     Recipe, related_name="recepies", null=True, on_delete=models.SET_NULL
+    # )
+
+    class Meta(AbstractModel.Meta):
+        verbose_name = "Favorite"
+        verbose_name_plural = "Favorites"
+        default_related_name = 'favorites'
+        # unique_together = (("user", "recipe"),)
+        # ordering = ["id"]
 
     def __str__(self):
         return f"{self.user} {self.recipe}"
 
 
-class ShoppingCart(models.Model):
+class ShoppingCart(AbstractModel):
     """ShoppingCart model"""
 
-    user = models.ForeignKey(
-        CustomUser,
-        related_name="shopping_cart_users",
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name="shopping_cart_recipes",
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+    # user = models.ForeignKey(
+    #     CustomUser,
+    #     related_name="shopping_cart_users",
+    #     null=True,
+    #     on_delete=models.SET_NULL,
+    # )
+    # recipe = models.ForeignKey(
+    #     Recipe,
+    #     related_name="shopping_cart_recipes",
+    #     null=True,
+    #     on_delete=models.SET_NULL,
+    # )
 
-    class Meta:
+    class Meta(AbstractModel.Meta):
         verbose_name = "Shopping Cart"
         verbose_name_plural = "Shopping Carts"
-        unique_together = (("user", "recipe"),)
-        ordering = ["id"]
+        default_related_name = 'shopping_carts'
+        # unique_together = (("user", "recipe"),)
+        # ordering = ["id"]
 
     def __str__(self):
         return f"{self.user} {self.recipe}"

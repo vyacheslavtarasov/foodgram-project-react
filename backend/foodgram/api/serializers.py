@@ -1,6 +1,7 @@
 import base64
 
 from django.core.files.base import ContentFile
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -28,14 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def check_is_subscribed(self, obj):
-        if (
-            self.context["request"].user.is_authenticated
-            and Subscribe.objects.filter(
-                user=self.context["request"].user, user_subscribed_on=obj
-            ).exists()
-        ):
-            return True
-        return False
+        current_user = self.context["request"].user
+        return current_user.is_authenticated and Subscribe.objects.filter(
+                user=self.context["request"].user, user_subscribed_on=obj).exists()
+
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -119,51 +116,42 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def get_ingredients_with_amount(self, obj):
-        ret = []
-        for val in RecipeIngredient.objects.filter(recipe=obj):
-            res = {}
-            res["amount"] = val.amount
-            res["name"] = val.ingredient.name
-            res["id"] = val.ingredient.id
-            res["measurement_name"] = val.ingredient.measurement_name
-            ret.append(res)
+
+        ret = RecipeIngredient.objects.select_related('recipe').filter(recipe=obj).values("amount", "ingredient__id", measurement_unit=F('ingredient__measurement_name'), name=F('ingredient__name'))
+        for entry in list(ret):
+            entry["id"] = entry.pop("ingredient__id")
+
         return ret
 
     def check_is_favorited(self, obj):
-        if (
-            self.context["request"].user.is_authenticated
-            and Favorite.objects.filter(
-                user=self.context["request"].user, recipe=obj
-            ).exists()
-        ):
-            return True
-        return False
+        current_user = self.context["request"].user
+        return current_user.is_authenticated and Favorite.objects.filter(
+                user=self.context["request"].user, recipe=obj).exists()
 
     def check_is_in_shopping_cart(self, obj):
-        if (
-            self.context["request"].user.is_authenticated
-            and ShoppingCart.objects.filter(
-                user=self.context["request"].user, recipe=obj
-            ).exists()
-        ):
-            return True
-        return False
+        current_user = self.context["request"].user
+        return current_user.is_authenticated and ShoppingCart.objects.filter(
+                user=self.context["request"].user, recipe=obj).exists()
 
     def create(self, validated_data):
         me = Recipe.objects.create(**validated_data)
+        t_objects_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
 
-            RecipeTag.objects.create(recipe=me, tag=my_tag)
+            t_objects_list.append(RecipeTag(recipe=me, tag=my_tag))
 
+        RecipeTag.objects.bulk_create(t_objects_list)
+
+        re_objects_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
             my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
+            
+            re_objects_list.append(RecipeIngredient(recipe=me, ingredient=my_ingredient, amount=ingredient_amount))
 
-            RecipeIngredient.objects.create(
-                recipe=me, ingredient=my_ingredient, amount=ingredient_amount
-            )
+        RecipeIngredient.objects.bulk_create(re_objects_list)
 
         return me
 
@@ -176,22 +164,23 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
         RecipeTag.objects.filter(recipe=instance).delete()
+        t_objects_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
 
-            RecipeTag.objects.create(recipe=instance, tag=my_tag)
+            t_objects_list.append(RecipeTag(recipe=instance, tag=my_tag))
 
-        RecipeIngredient.objects.filter(recipe=instance).delete()
+        RecipeTag.objects.bulk_create(t_objects_list)
+
+        re_objects_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
             my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
+            
+            re_objects_list.append(RecipeIngredient(recipe=instance, ingredient=my_ingredient, amount=ingredient_amount))
 
-            RecipeIngredient.objects.create(
-                recipe=instance,
-                ingredient=my_ingredient,
-                amount=ingredient_amount,
-            )
+        RecipeIngredient.objects.bulk_create(re_objects_list)
 
         instance.save()
         return instance

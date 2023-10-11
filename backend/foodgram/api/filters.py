@@ -1,11 +1,7 @@
 import django_filters
 
+from django_filters.widgets import BooleanWidget
 from api.models import Favorite, Recipe, ShoppingCart, Tag
-
-STATUS_CHOICES = (
-    (0, False),
-    (1, True),
-)
 
 
 def get_tag_choises():
@@ -15,41 +11,35 @@ def get_tag_choises():
 
 
 class RecipeFilter(django_filters.FilterSet):
-    author = django_filters.CharFilter(lookup_expr="id")
     tags = django_filters.MultipleChoiceFilter(
         choices=get_tag_choises, lookup_expr="slug"
     )
-    is_in_shopping_cart = django_filters.ChoiceFilter(
-        choices=STATUS_CHOICES,
+    is_in_shopping_cart = django_filters.BooleanFilter(
+        widget=BooleanWidget(),
         field_name="is_in_shopping_cart",
         method="filter_shopping_cart",
+
     )
-    is_favorited = django_filters.ChoiceFilter(
-        choices=STATUS_CHOICES,
+    is_favorited = django_filters.BooleanFilter(
         field_name="is_favorited",
         method="filter_favorite",
+        widget=BooleanWidget(),
     )
 
     def filter_shopping_cart(self, queryset, name, value):
-        goods = ShoppingCart.objects.all()
-        if value == "1":
-            goods = goods.filter(user=self.request.user)
-        elif value == "0":
-            goods = goods.exclude(user=self.request.user)
-        recipes = []
-        [recipes.append(i.recipe.id) for i in goods]
-        ret = queryset.filter(id__in=recipes)
+
+        chosen = ShoppingCart.objects.filter(user=self.request.user)
+        recipe_ids = [i.recipe.id for i in chosen]
+        ret = queryset.filter(id__in=recipe_ids) if value else queryset.exclude(id__in=recipe_ids)
+
         return ret
 
     def filter_favorite(self, queryset, name, value):
-        goods = Favorite.objects.all()
-        if value == "1":
-            goods = goods.filter(user=self.request.user)
-        elif value == "0":
-            goods = goods.exclude(user=self.request.user)
-        recipes = []
-        [recipes.append(i.recipe.id) for i in goods]
-        ret = queryset.filter(id__in=recipes)
+
+        favorited = Favorite.objects.filter(user=self.request.user)
+        recipe_ids = [i.recipe.id for i in favorited]
+        ret = queryset.filter(id__in=recipe_ids) if value else queryset.exclude(id__in=recipe_ids)
+    
         return ret
 
     class Meta:
