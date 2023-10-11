@@ -172,6 +172,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         RecipeTag.objects.bulk_create(t_objects_list)
 
+        RecipeIngredient.objects.filter(recipe=instance).delete()
         re_objects_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
