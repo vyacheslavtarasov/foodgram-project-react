@@ -81,8 +81,8 @@ class CustomUserViewSet(UserViewSet):
             user=request.user
         ).select_related("user_subscribed_on")
 
-        # firstnames = Subscribe.objects.filter(user=request.user)
-        # .values_list('user_subscribed_on')
+        # firstnames = CustomUser.objects.filter(user=request.user)
+        # .values_list('user_subscribed_on') 
         # print(list(firstnames))
         entries = []
         for entry in my_subscriptions:
