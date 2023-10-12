@@ -1,7 +1,7 @@
 import json
 
 from django.core.management.base import BaseCommand
-from api.models import Ingredient, Tag
+from recipe.models import Ingredient, Tag
 
 tag_data = [
     {"name": "завтрак", "slug": "breakfast", "color": "#111111"},
