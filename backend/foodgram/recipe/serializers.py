@@ -5,7 +5,7 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from api.models import (
+from recipe.models import (
     Favorite,
     Ingredient,
     Recipe,
@@ -15,7 +15,6 @@ from api.models import (
     Tag,
 )
 from user.serializers import UserSerializer
-from api.serializers import TagSerializer
 
 
 class Base64ImageField(serializers.ImageField):
@@ -27,6 +26,42 @@ class Base64ImageField(serializers.ImageField):
             data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
 
         return super().to_internal_value(data)
+
+
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = ("id", "name", "measurement_name")
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ("id", "name", "slug", "color")
+
+
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeIngredient
+        fields = "__all__"
+
+
+class RecipeTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeTag
+        fields = "__all__"
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = "__all__"
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingCart
+        fields = "__all__"
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -98,21 +133,21 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         me = Recipe.objects.create(**validated_data)
-        t_objects_list = []
+        tag_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
 
-            t_objects_list.append(RecipeTag(recipe=me, tag=my_tag))
+            tag_list.append(RecipeTag(recipe=me, tag=my_tag))
 
-        RecipeTag.objects.bulk_create(t_objects_list)
+        RecipeTag.objects.bulk_create(tag_list)
 
-        re_objects_list = []
+        recipe_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
             my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
 
-            re_objects_list.append(
+            recipe_list.append(
                 RecipeIngredient(
                     recipe=me,
                     ingredient=my_ingredient,
@@ -120,7 +155,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 )
             )
 
-        RecipeIngredient.objects.bulk_create(re_objects_list)
+        RecipeIngredient.objects.bulk_create(recipe_list)
 
         return me
 
@@ -133,22 +168,22 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
         RecipeTag.objects.filter(recipe=instance).delete()
-        t_objects_list = []
+        tag_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
 
-            t_objects_list.append(RecipeTag(recipe=instance, tag=my_tag))
+            tag_list.append(RecipeTag(recipe=instance, tag=my_tag))
 
-        RecipeTag.objects.bulk_create(t_objects_list)
+        RecipeTag.objects.bulk_create(tag_list)
 
         RecipeIngredient.objects.filter(recipe=instance).delete()
-        re_objects_list = []
+        recipe_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
             ingredient_amount = ingredient["amount"]
             my_ingredient = get_object_or_404(Ingredient, id=ingredient_id)
 
-            re_objects_list.append(
+            recipe_list.append(
                 RecipeIngredient(
                     recipe=instance,
                     ingredient=my_ingredient,
@@ -156,7 +191,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 )
             )
 
-        RecipeIngredient.objects.bulk_create(re_objects_list)
+        RecipeIngredient.objects.bulk_create(recipe_list)
 
         instance.save()
         return instance

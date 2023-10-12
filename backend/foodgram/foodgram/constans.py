@@ -1,10 +1,15 @@
 from enum import Enum
 
 
-class ModelsConstants(Enum):
+class UserModelsConstants(Enum):
     NAME_LENGTH = 150
     PASSWORD_LENGTH = 150
     EMAIL_LENGTH = 254
+    SLUG_LENGTH = 200
+
+
+class RecipeModelsConstants(Enum):
+    NAME_LENGTH = 150
     SLUG_LENGTH = 200
     TEXT_SMALL = 200
     COOCKING_TIME_MIN_VALUE = 1

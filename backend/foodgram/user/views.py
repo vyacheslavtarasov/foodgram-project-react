@@ -6,12 +6,12 @@ from rest_framework.response import Response
 
 from djoser.views import UserViewSet
 
-from api.models import (
+from recipe.models import (
     CustomUser,
     Recipe,
-    Subscribe,
 )
-from api.serializers import (
+from user.models import Subscribe
+from user.serializers import (
     SubscribeSerializer,
 )
 
@@ -112,9 +112,6 @@ class CustomUserViewSet(UserViewSet):
                     "is_subscribed": True,
                     "recipes_count": my_recipes.count(),
                     "recipes": data_2_return,
-                    # "recipes": my_recipes.values("id", "name",
-                    #  "cooking_time", "image").order_by("-id")[:recipes_limit]
-                    # It does not work, we need image.url here
                 }
             )
         paginator = PageNumberPagination()

@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
-from api.models import (
+from recipe.models import (
     CustomUser,
-    Subscribe,
 )
+
+from user.models import Subscribe
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,3 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
                 user=self.context["request"].user, user_subscribed_on=obj
             ).exists()
         )
+
+
+class SubscribeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscribe
+        fields = "__all__"

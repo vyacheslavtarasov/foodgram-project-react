@@ -6,13 +6,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
-from api.models import (
+from recipe.models import (
     Favorite,
     Recipe,
     RecipeIngredient,
     ShoppingCart,
 )
-from api.serializers import (
+from recipe.serializers import (
     ShoppingCartSerializer,
     FavoriteSerializer,
 )
@@ -137,7 +137,9 @@ class RecipeViewSet(
         ret = {}
         for entry in cart:
             recipe = entry.recipe
-            recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+            recipe_ingredients = RecipeIngredient.objects.filter(
+                recipe=recipe
+            ).order_by("name")
             for recipe_ingredient in recipe_ingredients:
                 if recipe_ingredient.ingredient.name in ret:
                     ret[

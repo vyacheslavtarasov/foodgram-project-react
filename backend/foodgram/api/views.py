@@ -3,11 +3,11 @@ from rest_framework import filters, mixins, viewsets
 from rest_framework.permissions import AllowAny
 
 
-from api.models import (
+from recipe.models import (
     Ingredient,
     Tag,
 )
-from api.serializers import (
+from recipe.serializers import (
     IngredientSerializer,
     TagSerializer,
 )

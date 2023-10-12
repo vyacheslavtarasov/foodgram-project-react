@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
-from foodgram.constans import ModelsConstants
+from foodgram.constans import UserModelsConstants
 
 
 class CustomUser(AbstractUser):
@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
 
     username = models.CharField(
         "Username",
-        max_length=ModelsConstants.NAME_LENGTH.value,
+        max_length=UserModelsConstants.NAME_LENGTH.value,
         unique=True,
         validators=[
             RegexValidator(
@@ -23,21 +23,25 @@ class CustomUser(AbstractUser):
         ],
     )
     first_name = models.CharField(
-        max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False
+        max_length=UserModelsConstants.NAME_LENGTH.value,
+        null=False,
+        blank=False,
     )
     last_name = models.CharField(
-        max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False
+        max_length=UserModelsConstants.NAME_LENGTH.value,
+        null=False,
+        blank=False,
     )
     email = models.EmailField(
         blank=False,
-        max_length=ModelsConstants.EMAIL_LENGTH.value,
+        max_length=UserModelsConstants.EMAIL_LENGTH.value,
         unique=True,
         verbose_name="email address",
         null=False,
     )
     password = models.CharField(
         "User password",
-        max_length=ModelsConstants.PASSWORD_LENGTH.value,
+        max_length=UserModelsConstants.PASSWORD_LENGTH.value,
         null=False,
         blank=False,
     )
@@ -52,3 +56,26 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return str(self.username)
+
+
+class Subscribe(models.Model):
+    """Subscribe model"""
+
+    user = models.ForeignKey(
+        CustomUser, related_name="users", null=True, on_delete=models.SET_NULL
+    )
+    user_subscribed_on = models.ForeignKey(
+        CustomUser,
+        related_name="users_subscribed_on",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    class Meta:
+        verbose_name = "Subscribe"
+        verbose_name_plural = "Subscriptions"
+        unique_together = (("user", "user_subscribed_on"),)
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"{self.user} {self.user_subscribed_on}"
