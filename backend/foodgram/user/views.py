@@ -77,18 +77,21 @@ class CustomUserViewSet(UserViewSet):
         recipes_limit = request.query_params.get("recipes_limit")
         if recipes_limit:
             recipes_limit = int(recipes_limit)
-        my_subscriptions = Subscribe.objects.filter(
-            user=request.user
-        ).select_related("user_subscribed_on")
 
-        # firstnames = CustomUser.objects.filter(user=request.user)
-        # .values_list('user_subscribed_on') 
-        # print(list(firstnames))
+        users = CustomUser.objects.filter(
+            id__in=list(
+                Subscribe.objects.filter(user=request.user)
+                .values("user_subscribed_on")
+                .get()
+                .values()
+            )
+        )
+
         entries = []
-        for entry in my_subscriptions:
-            my_recipes = Recipe.objects.filter(author=entry.user_subscribed_on)
+        for user in users:
+            my_recipes = Recipe.objects.filter(author=user)
             data_2_return = []
-            for my_recipe in my_recipes:
+            for idx, my_recipe in enumerate(my_recipes):
                 data_2_return.append(
                     {
                         "id": my_recipe.id,
@@ -97,18 +100,21 @@ class CustomUserViewSet(UserViewSet):
                         "image": my_recipe.image.url,
                     }
                 )
+                if recipes_limit and idx > recipes_limit:
+                    break
 
             entries.append(
                 {
-                    "id": entry.user_subscribed_on.id,
-                    "email": entry.user_subscribed_on.email,
-                    "first_name": entry.user_subscribed_on.first_name,
-                    "last_name": entry.user_subscribed_on.last_name,
+                    "id": user.id,
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
                     "is_subscribed": True,
                     "recipes_count": my_recipes.count(),
                     "recipes": data_2_return,
-                    # my_recipes.values("id", "name", "cooking_time", "image").
-                    # order_by("-id")[:recipes_limit]
+                    # "recipes": my_recipes.values("id", "name",
+                    #  "cooking_time", "image").order_by("-id")[:recipes_limit]
+                    # It does not work, we need image.url here
                 }
             )
         paginator = PageNumberPagination()
