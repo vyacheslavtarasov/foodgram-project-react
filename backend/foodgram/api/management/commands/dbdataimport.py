@@ -21,6 +21,8 @@ class Command(BaseCommand):
         dictionary_list = []
         with open(
             "/app/foodgram/data/ingredients.json", encoding="utf-8"
+            # "data/ingredients.json", encoding="utf-8"
+
         ) as json_file:
             dictionary_list = json.load(json_file)
         

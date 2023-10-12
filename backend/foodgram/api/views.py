@@ -9,10 +9,11 @@ from rest_framework.response import Response
 
 from djoser.views import UserViewSet
 
-from api.models import (CustomUser, Favorite, Ingredient, Recipe,
+from api.models import (CustomUser, Favorite, Ingredient,
                         RecipeIngredient, ShoppingCart, Subscribe, Tag)
-from api.serializers import (IngredientSerializer, RecipeSerializer,
+from api.serializers import (IngredientSerializer, 
                              TagSerializer, ShoppingCartSerializer, FavoriteSerializer, SubscribeSerializer)
+from recipe.serializers import RecipeSerializer
 
 from .filters import RecipeFilter
 from .permissions import Browse4AllEdit4Author, IsAuthenticated
@@ -55,163 +56,166 @@ class IngredientViewSet(
     search_fields = ("name",)
 
 
-class RecipeViewSet(
-    viewsets.ModelViewSet,
-):
+# class RecipeViewSet(
+#     viewsets.ModelViewSet,
+# ):
 
-    """
-    Получить список всех категорий.
-    """
+#     """
+#     Получить список всех категорий.
+#     """
 
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
-    permission_classes = [Browse4AllEdit4Author]
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RecipeFilter
+#     queryset = Recipe.objects.all()
+#     serializer_class = RecipeSerializer
+#     permission_classes = [Browse4AllEdit4Author]
+#     filter_backends = (DjangoFilterBackend,)
+#     filterset_class = RecipeFilter
 
-    lookup_field = "id"
-    search_fields = ("name",)
+#     lookup_field = "id"
+#     search_fields = ("name",)
 
-    def perform_create(self, serializer):
-        serializer.save(
-            is_favorited=False,
-            is_in_shopping_cart=False,
-            author=self.request.user,
-        )
+#     def perform_create(self, serializer):
+#         serializer.save(
+#             is_favorited=False,
+#             is_in_shopping_cart=False,
+#             author=self.request.user,
+#         )
     
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
-    def shopping_cart(self, request, id=None):
-        my_recipe = get_object_or_404(Recipe, id=id)
-        shopping_cart_serializer = ShoppingCartSerializer(data={"user": self.request.user.id, "recipe": my_recipe.id})
-        if shopping_cart_serializer.is_valid():
-            shopping_cart_serializer.save()
-            return Response(
-                {
-                    "id": my_recipe.id,
-                    "name": my_recipe.name,
-                    "cooking_time": my_recipe.cooking_time,
-                    "image": my_recipe.image.url,
-                }, status=status.HTTP_200_OK)
-        return Response(shopping_cart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
+#     def shopping_cart(self, request, id=None):
+#         my_recipe = get_object_or_404(Recipe, id=id)
+#         shopping_cart_serializer = ShoppingCartSerializer(data={"user": self.request.user.id, "recipe": my_recipe.id})
+#         if shopping_cart_serializer.is_valid():
+#             shopping_cart_serializer.save()
+#             return Response(
+#                 {
+#                     "id": my_recipe.id,
+#                     "name": my_recipe.name,
+#                     "cooking_time": my_recipe.cooking_time,
+#                     "image": my_recipe.image.url,
+#                 }, status=status.HTTP_200_OK)
+#         return Response(shopping_cart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @shopping_cart.mapping.delete
-    def delete_item_from_shopping_cart(self, request, id=None):
-        my_recipe = get_object_or_404(Recipe, id=id)
-        if (ShoppingCart.objects.filter(
-                recipe=my_recipe, user=request.user
-            ).delete()[0] != 0):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
+#     @shopping_cart.mapping.delete
+#     def delete_item_from_shopping_cart(self, request, id=None):
+#         my_recipe = get_object_or_404(Recipe, id=id)
+#         if (ShoppingCart.objects.filter(
+#                 recipe=my_recipe, user=request.user
+#             ).delete()[0] != 0):
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
-    def favorite(self, request, id=None):
-        my_recipe = get_object_or_404(Recipe, id=id)
-        favorite_serializer = FavoriteSerializer(data={"user": self.request.user.id, "recipe": my_recipe.id})
-        if favorite_serializer.is_valid():
-            favorite_serializer.save()
-            return Response(
-                {
-                    "id": my_recipe.id,
-                    "name": my_recipe.name,
-                    "cooking_time": my_recipe.cooking_time,
-                    "image": my_recipe.image.url,
-                }, 
-                status=status.HTTP_200_OK)
-        return Response(favorite_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
+#     def favorite(self, request, id=None):
+#         my_recipe = get_object_or_404(Recipe, id=id)
+#         favorite_serializer = FavoriteSerializer(data={"user": self.request.user.id, "recipe": my_recipe.id})
+#         if favorite_serializer.is_valid():
+#             favorite_serializer.save()
+#             return Response(
+#                 {
+#                     "id": my_recipe.id,
+#                     "name": my_recipe.name,
+#                     "cooking_time": my_recipe.cooking_time,
+#                     "image": my_recipe.image.url,
+#                 }, 
+#                 status=status.HTTP_200_OK)
+#         return Response(favorite_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @favorite.mapping.delete
-    def delete_item_from_favorite(self, request, id=None):
-        my_recipe = get_object_or_404(Recipe, id=id)
-        if (Favorite.objects.filter(
-                recipe=my_recipe, user=request.user
-            ).delete()[0] != 0):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
+#     @favorite.mapping.delete
+#     def delete_item_from_favorite(self, request, id=None):
+#         my_recipe = get_object_or_404(Recipe, id=id)
+#         if (Favorite.objects.filter(
+#                 recipe=my_recipe, user=request.user
+#             ).delete()[0] != 0):
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
 
 
     
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated],)
-    def download_shopping_cart(self, request, id=None):
-        cart = ShoppingCart.objects.filter(user=request.user)
+#     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated],)
+#     def download_shopping_cart(self, request, id=None):
+#         cart = ShoppingCart.objects.filter(user=request.user)
 
-        ret = {}
-        for entry in cart:
-            recipe = entry.recipe
-            recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
-            for recipe_ingredient in recipe_ingredients:
-                if recipe_ingredient.ingredient.name in ret:
-                    ret[
-                        recipe_ingredient.ingredient.name
-                    ] += recipe_ingredient.amount
-                else:
-                    ret[
-                        recipe_ingredient.ingredient.name
-                    ] = recipe_ingredient.amount
-        pr = ""
-        for key, value in ret.items():
-            pr += f"{key}\t{value}\n"
+#         ret = {}
+#         for entry in cart:
+#             recipe = entry.recipe
+#             recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+#             for recipe_ingredient in recipe_ingredients:
+#                 if recipe_ingredient.ingredient.name in ret:
+#                     ret[
+#                         recipe_ingredient.ingredient.name
+#                     ] += recipe_ingredient.amount
+#                 else:
+#                     ret[
+#                         recipe_ingredient.ingredient.name
+#                     ] = recipe_ingredient.amount
+#         pr = ""
+#         for key, value in ret.items():
+#             pr += f"{key}\t{value}\n"
 
-        response = HttpResponse(pr, content_type="text/plain")
-        response["Content-Disposition"] = 'attachment; filename="1.txt"'
-        return response
+#         response = HttpResponse(pr, content_type="text/plain")
+#         response["Content-Disposition"] = 'attachment; filename="1.txt"'
+#         return response
 
 
-class CustomUserViewSet(UserViewSet):
+# class CustomUserViewSet(UserViewSet):
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
-    def subscribe(self, request, id=None):
-        my_user_subscribe_on = get_object_or_404(CustomUser, id=id)
-        subscribe_serializer = SubscribeSerializer(data={"user_subscribed_on": my_user_subscribe_on.id, "user": request.user.id})
-        my_recipes = Recipe.objects.filter(author=my_user_subscribe_on)
-        if subscribe_serializer.is_valid():
-            subscribe_serializer.save()
-            return Response(
-                {
-                    "id": my_user_subscribe_on.id,
-                    "email": my_user_subscribe_on.email,
-                    "first_name": my_user_subscribe_on.first_name,
-                    "last_name": my_user_subscribe_on.last_name,
-                    "is_subscribed": True,
-                    "recipes_count": my_recipes.count(),
-                    "recipes": my_recipes.values("id", "name", "cooking_time", "image")
-                }, status=status.HTTP_200_OK)
-        return Response(subscribe_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated],)
+#     def subscribe(self, request, id=None):
+#         my_user_subscribe_on = get_object_or_404(CustomUser, id=id)
+#         subscribe_serializer = SubscribeSerializer(data={"user_subscribed_on": my_user_subscribe_on.id, "user": request.user.id})
+#         my_recipes = Recipe.objects.filter(author=my_user_subscribe_on)
+#         if subscribe_serializer.is_valid():
+#             subscribe_serializer.save()
+#             return Response(
+#                 {
+#                     "id": my_user_subscribe_on.id,
+#                     "email": my_user_subscribe_on.email,
+#                     "first_name": my_user_subscribe_on.first_name,
+#                     "last_name": my_user_subscribe_on.last_name,
+#                     "is_subscribed": True,
+#                     "recipes_count": my_recipes.count(),
+#                     "recipes": my_recipes.values("id", "name", "cooking_time", "image")
+#                 }, status=status.HTTP_200_OK)
+#         return Response(subscribe_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @subscribe.mapping.delete
-    def delete_item_from_subscribe(self, request, id=None):
-        my_user_subscribe_on = get_object_or_404(CustomUser, id=id)
-        if (Subscribe.objects.filter(
-                user_subscribed_on=my_user_subscribe_on, user=request.user
-            ).delete()[0] != 0):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
+#     @subscribe.mapping.delete
+#     def delete_item_from_subscribe(self, request, id=None):
+#         my_user_subscribe_on = get_object_or_404(CustomUser, id=id)
+#         if (Subscribe.objects.filter(
+#                 user_subscribed_on=my_user_subscribe_on, user=request.user
+#             ).delete()[0] != 0):
+#             return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response({"errors": "Delete operation failed."}, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated],)
-    def subscriptions(self, request, id=None):
-        recipes_limit = request.query_params.get("recipes_limit")
-        if recipes_limit:
-            recipes_limit = int(recipes_limit)
-        my_subscriptions = Subscribe.objects.filter(user=request.user)
+#     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated],)
+#     def subscriptions(self, request, id=None):
+#         recipes_limit = request.query_params.get("recipes_limit")
+#         if recipes_limit:
+#             recipes_limit = int(recipes_limit)
+#         my_subscriptions = Subscribe.objects.filter(user=request.user).select_related("user_subscribed_on")
 
-        entries = []
-        for entry in my_subscriptions:
-            my_recipes = Recipe.objects.filter(author=entry.user_subscribed_on)
-            entries.append({
-                "id": entry.user_subscribed_on.id,
-                "email": entry.user_subscribed_on.email,
-                "first_name": entry.user_subscribed_on.first_name,
-                "last_name": entry.user_subscribed_on.last_name,
-                "is_subscribed": True,
-                "recipes_count": my_recipes.count(),
-                "recipes": my_recipes.values("id", "name", "cooking_time", "image").order_by("-id")[:recipes_limit],
-            })
-        paginator = PageNumberPagination()
-        paginator.page_size = 20
-        result_page = paginator.paginate_queryset(entries, request)
-        return paginator.get_paginated_response(result_page)
+#         # firstnames = Subscribe.objects.filter(user=request.user).values_list('user_subscribed_on')
+#         # print(list(firstnames))
+
+#         entries = []
+#         for entry in my_subscriptions:
+#             my_recipes = Recipe.objects.filter(author=entry.user_subscribed_on)
+#             entries.append({
+#                 "id": entry.user_subscribed_on.id,
+#                 "email": entry.user_subscribed_on.email,
+#                 "first_name": entry.user_subscribed_on.first_name,
+#                 "last_name": entry.user_subscribed_on.last_name,
+#                 "is_subscribed": True,
+#                 "recipes_count": my_recipes.count(),
+#                 "recipes": my_recipes.values("id", "name", "cooking_time", "image").order_by("-id")[:recipes_limit],
+#             })
+#         paginator = PageNumberPagination()
+#         paginator.page_size = 20
+#         result_page = paginator.paginate_queryset(entries, request)
+#         return paginator.get_paginated_response(result_page)
 
 
 

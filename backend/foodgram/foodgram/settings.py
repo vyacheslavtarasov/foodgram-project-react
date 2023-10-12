@@ -18,6 +18,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 INSTALLED_APPS = [
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -25,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api.apps.ApiConfig",
+    "user.apps.UserConfig",
+    "recipe.apps.RecipeConfig",
     "rest_framework",
     "djoser",
     "rest_framework.authtoken",
@@ -63,7 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
-AUTH_USER_MODEL = "api.CustomUser"
+AUTH_USER_MODEL = "user.CustomUser"
 
 DJOSER = {
     "HIDE_USERS": False,
