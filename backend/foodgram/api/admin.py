@@ -1,7 +1,16 @@
 from django.contrib import admin
 
-from .models import (CustomUser, Favorite, Ingredient, Recipe,
-                     RecipeIngredient, RecipeTag, ShoppingCart, Subscribe, Tag)
+from .models import (
+    CustomUser,
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    RecipeTag,
+    ShoppingCart,
+    Subscribe,
+    Tag,
+)
 
 
 @admin.register(CustomUser)
@@ -40,8 +49,15 @@ class TagAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     """Reisters model Recipe"""
 
-    list_display = ("id", "name", "author", "text", "cooking_time",
-                    "tag", "favorited")
+    list_display = (
+        "id",
+        "name",
+        "author",
+        "text",
+        "cooking_time",
+        "tag",
+        "favorited",
+    )
     search_fields = ["name", "author__username", "tags__name"]
 
     def favorited(self, obj):

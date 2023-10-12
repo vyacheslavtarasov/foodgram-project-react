@@ -1,62 +1,24 @@
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.core.validators import (
+    MinValueValidator,
+    MaxValueValidator,
+    RegexValidator,
+)
 from django.db import models
 
 from foodgram.constans import ModelsConstants
 from user.models import CustomUser
-# from recipe.models import Recipe
-
-
-# class CustomUser(AbstractUser):
-#     """Custom User model"""
-
-#     username = models.CharField(
-#         "Username",
-#         max_length=ModelsConstants.NAME_LENGTH.value,
-#         unique=True,
-#         validators=[
-#             RegexValidator(
-#                 regex="^[\\w.@+-]+\\Z",
-#                 message=(
-#                     "This field must contain digits and characters including"
-#                     " @/./+/-/_."
-#                 ),
-#             ),
-#         ],
-#     )
-#     first_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
-#     last_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
-#     email = models.EmailField(
-#         blank=False,
-#         max_length=ModelsConstants.EMAIL_LENGTH.value,
-#         unique=True,
-#         verbose_name="email address",
-#         null=False,
-#     )
-#     password = models.CharField(
-#         "User password",
-#         max_length=ModelsConstants.PASSWORD_LENGTH.value,
-#         null=False,
-#         blank=False,
-#     )
-
-#     class Meta:
-#         verbose_name = "User"
-#         verbose_name_plural = "Users"
-#         ordering = ["-id"]
-
-#     REQUIRED_FIELDS = ["username", "first_name", "last_name", "password"]
-#     USERNAME_FIELD = "email"
-
-#     def __str__(self):
-#         return str(self.username)
 
 
 class Ingredient(models.Model):
     """Ingredient model"""
 
-    name = models.CharField(verbose_name="Ingredient name", max_length=ModelsConstants.NAME_LENGTH.value)
+    name = models.CharField(
+        verbose_name="Ingredient name",
+        max_length=ModelsConstants.NAME_LENGTH.value,
+    )
     measurement_name = models.CharField(
-        verbose_name="Unit of measure", max_length=ModelsConstants.NAME_LENGTH.value
+        verbose_name="Unit of measure",
+        max_length=ModelsConstants.NAME_LENGTH.value,
     )
 
     class Meta:
@@ -72,7 +34,9 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     """Tag"""
 
-    name = models.CharField(verbose_name="Tag", max_length=ModelsConstants.NAME_LENGTH.value)
+    name = models.CharField(
+        verbose_name="Tag", max_length=ModelsConstants.NAME_LENGTH.value
+    )
     slug = models.SlugField(
         verbose_name="Slug of the tag name",
         unique=True,
@@ -81,9 +45,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex="^[-a-zA-Z0-9_]+$",
-                message=(
-                    "This field must represent a color in #XXXXXX format."
-                ),
+                message="This field must represent a color in #XXXXXX format.",
             ),
         ],
     )
@@ -94,9 +56,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
-                message=(
-                    "This field must represent a color in #XXXXXX format."
-                ),
+                message="This field must represent a color in #XXXXXX format.",
             ),
         ],
     )
@@ -113,8 +73,14 @@ class Tag(models.Model):
 class Recipe(models.Model):
     """Recipe model"""
 
-    name = models.CharField(verbose_name="Recipe name", max_length=ModelsConstants.NAME_LENGTH.value)
-    text = models.CharField(verbose_name="Recipe description", max_length=ModelsConstants.TEXT_SMALL.value)
+    name = models.CharField(
+        verbose_name="Recipe name",
+        max_length=ModelsConstants.NAME_LENGTH.value,
+    )
+    text = models.CharField(
+        verbose_name="Recipe description",
+        max_length=ModelsConstants.TEXT_SMALL.value,
+    )
     tags = models.ManyToManyField(Tag, through="RecipeTag")
 
     author = models.ForeignKey(
@@ -127,8 +93,12 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient, through="RecipeIngredient"
     )
-    cooking_time = models.SmallIntegerField(validators=[MinValueValidator(ModelsConstants.COOCKING_TIME_MIN_VALUE.value),
-                                       MaxValueValidator(ModelsConstants.COOCKING_TIME_MAX_VALE.value)])
+    cooking_time = models.SmallIntegerField(
+        validators=[
+            MinValueValidator(ModelsConstants.COOCKING_TIME_MIN_VALUE.value),
+            MaxValueValidator(ModelsConstants.COOCKING_TIME_MAX_VALE.value),
+        ]
+    )
     is_favorited = models.BooleanField()
     is_in_shopping_cart = models.BooleanField()
     image = models.ImageField(
@@ -165,8 +135,12 @@ class RecipeIngredient(models.Model):
 
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    amount = models.SmallIntegerField(validators=[MinValueValidator(ModelsConstants.INGREDIENT_MIN_AMOUNT.value),
-                                       MaxValueValidator(ModelsConstants.INGREDIENT_MAX_AMOUNT.value)])
+    amount = models.SmallIntegerField(
+        validators=[
+            MinValueValidator(ModelsConstants.INGREDIENT_MIN_AMOUNT.value),
+            MaxValueValidator(ModelsConstants.INGREDIENT_MAX_AMOUNT.value),
+        ]
+    )
 
     class Meta:
         verbose_name = "Recipe Ingredient"
@@ -177,20 +151,20 @@ class RecipeIngredient(models.Model):
     def __str__(self):
         return f"{self.recipe} {self.ingredient}"
 
+
 class AbstractModel(models.Model):
     user = models.ForeignKey(
         CustomUser,
         null=True,
         on_delete=models.SET_NULL,
     )
-    recipe = models.ForeignKey(
-        Recipe, null=True, on_delete=models.SET_NULL
-    )
+    recipe = models.ForeignKey(Recipe, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         abstract = True
         unique_together = (("user", "recipe"),)
         ordering = ["id"]
+
 
 class Favorite(AbstractModel):
     """Favorite model"""
@@ -208,7 +182,7 @@ class Favorite(AbstractModel):
     class Meta(AbstractModel.Meta):
         verbose_name = "Favorite"
         verbose_name_plural = "Favorites"
-        default_related_name = 'favorites'
+        default_related_name = "favorites"
         # unique_together = (("user", "recipe"),)
         # ordering = ["id"]
 
@@ -235,7 +209,7 @@ class ShoppingCart(AbstractModel):
     class Meta(AbstractModel.Meta):
         verbose_name = "Shopping Cart"
         verbose_name_plural = "Shopping Carts"
-        default_related_name = 'shopping_carts'
+        default_related_name = "shopping_carts"
         # unique_together = (("user", "recipe"),)
         # ordering = ["id"]
 

@@ -22,8 +22,12 @@ class CustomUser(AbstractUser):
             ),
         ],
     )
-    first_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
-    last_name = models.CharField(max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False)
+    first_name = models.CharField(
+        max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False
+    )
+    last_name = models.CharField(
+        max_length=ModelsConstants.NAME_LENGTH.value, null=False, blank=False
+    )
     email = models.EmailField(
         blank=False,
         max_length=ModelsConstants.EMAIL_LENGTH.value,

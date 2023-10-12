@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class ModelsConstants(Enum):
     NAME_LENGTH = 150
     PASSWORD_LENGTH = 150
