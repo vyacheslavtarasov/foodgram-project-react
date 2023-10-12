@@ -61,6 +61,16 @@ class CustomUserViewSet(UserViewSet):
         entries = []
         for entry in my_subscriptions:
             my_recipes = Recipe.objects.filter(author=entry.user_subscribed_on)
+            data2return = []
+            for my_recipe in my_recipes:
+                data2return.append(
+                    {
+                        "id": my_recipe.id,
+                        "name": my_recipe.name,
+                        "cooking_time": my_recipe.cooking_time,
+                        "image": my_recipe.image.url,
+                    }
+                )
             entries.append({
                 "id": entry.user_subscribed_on.id,
                 "email": entry.user_subscribed_on.email,
@@ -68,7 +78,7 @@ class CustomUserViewSet(UserViewSet):
                 "last_name": entry.user_subscribed_on.last_name,
                 "is_subscribed": True,
                 "recipes_count": my_recipes.count(),
-                "recipes": my_recipes.values("id", "name", "cooking_time", "image").order_by("-id")[:recipes_limit],
+                "recipes": data2return, #my_recipes.values("id", "name", "cooking_time", "image").order_by("-id")[:recipes_limit],
             })
         paginator = PageNumberPagination()
         paginator.page_size = 20
