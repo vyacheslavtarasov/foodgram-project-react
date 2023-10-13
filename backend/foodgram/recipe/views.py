@@ -126,7 +126,7 @@ class RecipeViewSet(
         permission_classes=[IsAuthenticated],
     )
     def download_shopping_cart(self, request, id=None):
-        cart = ShoppingCart.objects.filter(user=request.user)
+        cart = ShoppingCart.objects.filter(user=self.request.user)
 
         ret = {}
         for entry in cart:
