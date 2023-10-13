@@ -81,7 +81,7 @@ class CustomUserViewSet(UserViewSet):
             many=True,
         )
 
-        return Response(user_serializer.data, status=status.HTTP_200_OK)
+        # return Response(user_serializer.data, status=status.HTTP_200_OK)
 
         paginator = paginations.CustomPagination()
         result_page = paginator.paginate_queryset(

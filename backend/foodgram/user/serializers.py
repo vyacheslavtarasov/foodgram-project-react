@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, obj):
         recipes_limit = None
-        if  "recipes_limit" in self.context:
+        if "recipes_limit" in self.context:
             recipes_limit = self.context["recipes_limit"]
         recipes = Recipe.objects.filter(author=obj)
         ret = []
