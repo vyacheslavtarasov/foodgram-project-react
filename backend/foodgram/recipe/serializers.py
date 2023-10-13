@@ -98,9 +98,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, initial_data):
-        if initial_data["username"] == "me":
-            raise serializers.ValidationError("You must not use me as login.")
-
         if not self.initial_data["tags"]:
             raise serializers.ValidationError(
                 "You must assign at least one tag"
@@ -158,15 +155,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        me = Recipe.objects.create(**validated_data)
+        me = Recipe.objects.create(**validated_data)  
         tag_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
-
             tag_list.append(RecipeTag(recipe=me, tag=my_tag))
 
         RecipeTag.objects.bulk_create(tag_list)
-
         recipe_list = []
         for ingredient in self.initial_data["ingredients"]:
             ingredient_id = ingredient["id"]
