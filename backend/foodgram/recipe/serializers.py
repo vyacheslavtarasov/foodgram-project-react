@@ -113,9 +113,11 @@ class RecipeSerializer(serializers.ModelSerializer):
                 "You must assign at least one ingredients"
             )
 
-        if len(self.initial_data["ingredients"]) > len(
-            set(self.initial_data["ingredients"])
-        ):
+        ingredient_ids = [
+            ingredient["id"] for ingredient in self.initial_data["ingredients"]
+        ]
+
+        if len(ingredient_ids) > len(set(ingredient_ids)):
             raise serializers.ValidationError("Ingredients must be unique.")
 
         return initial_data
@@ -155,7 +157,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        me = Recipe.objects.create(**validated_data)  
+        me = Recipe.objects.create(**validated_data)
+        print("here")
         tag_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
