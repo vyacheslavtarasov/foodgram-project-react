@@ -74,8 +74,8 @@ DJOSER = {
         "user": ["rest_framework.permissions.IsAuthenticated"],
     },
     "SERIALIZERS": {
-        "user": "user.serializers.UserSerializer",
-        "current_user": "user.serializers.UserSerializer",
+        "user": "user.serializers.UserSerializer4Djoser",
+        "current_user": "user.serializers.UserSerializer4Djoser",
     },
 }
 

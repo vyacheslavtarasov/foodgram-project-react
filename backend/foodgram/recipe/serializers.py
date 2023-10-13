@@ -14,7 +14,7 @@ from recipe.models import (
     ShoppingCart,
     Tag,
 )
-from user.serializers import UserSerializer
+from user.serializers import UserSerializer4Djoser
 
 
 class Base64ImageField(serializers.ImageField):
@@ -80,7 +80,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         "check_is_in_shopping_cart", read_only=True
     )
 
-    author = UserSerializer(read_only=True)
+    author = UserSerializer4Djoser(read_only=True)
 
     class Meta:
         model = Recipe

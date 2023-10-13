@@ -62,7 +62,6 @@ class CustomUserViewSet(UserViewSet):
         pagination_class=paginations.CustomPagination,
     )
     def subscriptions(self, request, id=None):
-
         recipes_limit = request.query_params.get("recipes_limit")
         if recipes_limit:
             recipes_limit = int(recipes_limit)
