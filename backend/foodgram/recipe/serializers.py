@@ -100,17 +100,25 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate(self, initial_data):
         if initial_data["username"] == "me":
             raise serializers.ValidationError("You must not use me as login.")
-        
+
         if not self.initial_data["tags"]:
-            raise serializers.ValidationError("You must assign at least one tag")
-        
-        if len(self.initial_data["tags"]) > len(set(self.initial_data["tags"])):
+            raise serializers.ValidationError(
+                "You must assign at least one tag"
+            )
+
+        if len(self.initial_data["tags"]) > len(
+            set(self.initial_data["tags"])
+        ):
             raise serializers.ValidationError("Tags must be unique.")
-        
+
         if not self.initial_data["ingredients"]:
-            raise serializers.ValidationError("You must assign at least one ingredients")
-        
-        if len(self.initial_data["ingredients"]) > len(set(self.initial_data["ingredients"])):
+            raise serializers.ValidationError(
+                "You must assign at least one ingredients"
+            )
+
+        if len(self.initial_data["ingredients"]) > len(
+            set(self.initial_data["ingredients"])
+        ):
             raise serializers.ValidationError("Ingredients must be unique.")
 
         return initial_data

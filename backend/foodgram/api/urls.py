@@ -11,5 +11,5 @@ router.register(r"ingredients", IngredientViewSet, basename="ingredients")
 router.register(r"tags", TagViewSet, basename="tags")
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path("", include(router.urls)),
 ]

@@ -9,7 +9,7 @@ users.register("users", CustomUserViewSet, basename="users")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("api.urls", namespace="api")),
-    path("", include("recipe.urls", namespace="recipe")),
-    path("", include("user.urls", namespace="user")),
+    path("api/", include("api.urls", namespace="api")),
+    path("api/", include("recipe.urls", namespace="recipe")),
+    path("api/", include("user.urls", namespace="user")),
 ]

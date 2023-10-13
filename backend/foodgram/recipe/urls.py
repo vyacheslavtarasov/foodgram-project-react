@@ -10,5 +10,5 @@ router = routers.DefaultRouter(trailing_slash=True)
 router.register(r"recipes", RecipeViewSet, basename="recipes")
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path("", include(router.urls)),
 ]
