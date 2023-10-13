@@ -56,7 +56,7 @@ class RecipeViewSet(
         shopping_cart_serializer = ShoppingCartSerializer(
             data={"user": self.request.user.id, "recipe": my_recipe.id}
         )
-        if shopping_cart_serializer.is_valid():
+        if shopping_cart_serializer.is_valid(raise_exception=True):
             shopping_cart_serializer.save()
             return Response(
                 {
@@ -96,7 +96,7 @@ class RecipeViewSet(
         favorite_serializer = FavoriteSerializer(
             data={"user": self.request.user.id, "recipe": my_recipe.id}
         )
-        if favorite_serializer.is_valid():
+        if favorite_serializer.is_valid(raise_exception=True):
             favorite_serializer.save()
             return Response(
                 {
@@ -115,11 +115,19 @@ class RecipeViewSet(
     def delete_item_from_favorite(self, request, id=None):
         my_recipe = get_object_or_404(Recipe, id=id)
         if (
-            Favorite.objects.filter(
-                recipe=my_recipe, user=request.user
-            ).delete()[0]
+            get_object_or_404(
+                Favorite, recipe=my_recipe, user=self.request.user
+            )
+            .delete()
+            .first
             != 0
         ):
+            # if (
+            #     Favorite.objects.filter(
+            #         recipe=my_recipe, user=request.user
+            #     ).delete()[0]
+            #     != 0
+            # ):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             {"errors": "Delete operation failed."},

@@ -33,7 +33,7 @@ class CustomUserViewSet(UserViewSet):
             }
         )
         my_recipes = Recipe.objects.filter(author=my_user_subscribe_on)
-        if subscribe_serializer.is_valid():
+        if subscribe_serializer.is_valid(raise_exception=True):
             subscribe_serializer.save()
             return Response(
                 {
