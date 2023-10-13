@@ -114,25 +114,14 @@ class RecipeViewSet(
     @favorite.mapping.delete
     def delete_item_from_favorite(self, request, id=None):
         my_recipe = get_object_or_404(Recipe, id=id)
-        if (
-            get_object_or_404(
-                Favorite, recipe=my_recipe, user=self.request.user
+        if not get_object_or_404(
+            Favorite, recipe=my_recipe, user=self.request.user
+        ).delete():
+            return Response(
+                {"errors": "Delete operation failed."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-            .delete()
-            .first
-            != 0
-        ):
-            # if (
-            #     Favorite.objects.filter(
-            #         recipe=my_recipe, user=request.user
-            #     ).delete()[0]
-            #     != 0
-            # ):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            {"errors": "Delete operation failed."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,
