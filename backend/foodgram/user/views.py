@@ -16,8 +16,6 @@ from api.permissions import IsAuthenticated
 
 
 class CustomUserViewSet(UserViewSet):
-    pagination_class = paginations.CustomPagination
-
     @action(
         detail=True,
         methods=["post"],
@@ -59,7 +57,6 @@ class CustomUserViewSet(UserViewSet):
         detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        pagination_class=paginations.CustomPagination,
     )
     def subscriptions(self, request, id=None):
         recipes_limit = request.query_params.get("recipes_limit")
@@ -80,10 +77,6 @@ class CustomUserViewSet(UserViewSet):
             many=True,
         )
 
-        # return Response(user_serializer.data, status=status.HTTP_200_OK)
-
-        paginator = paginations.CustomPagination()
-        result_page = paginator.paginate_queryset(
-            user_serializer.data, request
+        return self.get_paginated_response(
+            self.paginate_queryset(user_serializer.data)
         )
-        return paginator.get_paginated_response(result_page)
