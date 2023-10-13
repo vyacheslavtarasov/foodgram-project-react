@@ -62,6 +62,7 @@ class CustomUserViewSet(UserViewSet):
         pagination_class=paginations.CustomPagination,
     )
     def subscriptions(self, request, id=None):
+
         recipes_limit = request.query_params.get("recipes_limit")
         if recipes_limit:
             recipes_limit = int(recipes_limit)
@@ -80,7 +81,7 @@ class CustomUserViewSet(UserViewSet):
             many=True,
         )
 
-        # return Response(user_serializer.data, status=status.HTTP_200_OK)
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
 
         paginator = paginations.CustomPagination()
         result_page = paginator.paginate_queryset(
