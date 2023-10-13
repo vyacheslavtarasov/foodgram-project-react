@@ -53,18 +53,19 @@ class RecipeViewSet(
     )
     def shopping_cart(self, request, id=None):
         my_recipe = get_object_or_404(Recipe, id=id)
+        recipe_serializer = RecipeSerializer(
+            my_recipe, context={"request": request}
+        )
+
         shopping_cart_serializer = ShoppingCartSerializer(
             data={"user": self.request.user.id, "recipe": my_recipe.id}
         )
         if shopping_cart_serializer.is_valid(raise_exception=True):
             shopping_cart_serializer.save()
+            necessary_fields = ["id", "name", "cooking_time", "image"]
             return Response(
-                {
-                    "id": my_recipe.id,
-                    "name": my_recipe.name,
-                    "cooking_time": my_recipe.cooking_time,
-                    "image": my_recipe.image.url,
-                },
+                shopping_cart_serializer.data,
+                {key: recipe_serializer.data[key] for key in necessary_fields},
                 status=status.HTTP_200_OK,
             )
         return Response(
@@ -74,17 +75,14 @@ class RecipeViewSet(
     @shopping_cart.mapping.delete
     def delete_item_from_shopping_cart(self, request, id=None):
         my_recipe = get_object_or_404(Recipe, id=id)
-        if (
-            ShoppingCart.objects.filter(
-                recipe=my_recipe, user=request.user
-            ).delete()[0]
-            != 0
-        ):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            {"errors": "Delete operation failed."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        if not get_object_or_404(
+            ShoppingCart, recipe=my_recipe, user=request.user
+        ).delete():
+            return Response(
+                {"errors": "Delete operation failed."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
@@ -93,18 +91,18 @@ class RecipeViewSet(
     )
     def favorite(self, request, id=None):
         my_recipe = get_object_or_404(Recipe, id=id)
+        recipe_serializer = RecipeSerializer(
+            my_recipe, context={"request": request}
+        )
+
         favorite_serializer = FavoriteSerializer(
             data={"user": self.request.user.id, "recipe": my_recipe.id}
         )
         if favorite_serializer.is_valid(raise_exception=True):
             favorite_serializer.save()
+            necessary_fields = ["id", "name", "cooking_time", "image"]
             return Response(
-                {
-                    "id": my_recipe.id,
-                    "name": my_recipe.name,
-                    "cooking_time": my_recipe.cooking_time,
-                    "image": my_recipe.image.url,
-                },
+                {key: recipe_serializer.data[key] for key in necessary_fields},
                 status=status.HTTP_200_OK,
             )
         return Response(

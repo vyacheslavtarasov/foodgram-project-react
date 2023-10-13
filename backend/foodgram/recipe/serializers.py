@@ -100,7 +100,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate(self, initial_data):
         if not self.initial_data["tags"]:
             raise serializers.ValidationError(
-                "You must assign at least one tag"
+                "You must assign at least one tag."
             )
 
         if len(self.initial_data["tags"]) > len(
@@ -110,7 +110,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         if not self.initial_data["ingredients"]:
             raise serializers.ValidationError(
-                "You must assign at least one ingredients"
+                "You must assign at least one ingredients."
             )
 
         ingredient_ids = [
@@ -135,7 +135,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
         for entry in list(ret):
             entry["id"] = entry.pop("ingredient__id")
-
         return ret
 
     def check_is_favorited(self, obj):
@@ -158,7 +157,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         me = Recipe.objects.create(**validated_data)
-        print("here")
         tag_list = []
         for tag_id in self.initial_data["tags"]:
             my_tag = get_object_or_404(Tag, id=tag_id)
