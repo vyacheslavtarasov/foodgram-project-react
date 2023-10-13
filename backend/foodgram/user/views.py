@@ -5,7 +5,6 @@ from rest_framework.response import Response
 
 from djoser.views import UserViewSet
 
-from api import paginations
 from recipe.models import (
     CustomUser,
 )

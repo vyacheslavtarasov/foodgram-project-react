@@ -64,7 +64,6 @@ class RecipeViewSet(
             shopping_cart_serializer.save()
             necessary_fields = ["id", "name", "cooking_time", "image"]
             return Response(
-                shopping_cart_serializer.data,
                 {key: recipe_serializer.data[key] for key in necessary_fields},
                 status=status.HTTP_200_OK,
             )
