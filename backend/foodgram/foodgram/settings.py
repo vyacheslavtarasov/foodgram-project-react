@@ -112,11 +112,8 @@ DATABASES = {
 # }
 
 LOGGING = {
-    # Define the logging version
     "version": 1,
-    # Enable the existing loggers
     "disable_existing_loggers": False,
-    # Define the handlers
     "handlers": {
         "file": {
             "level": "WARNING",
@@ -127,7 +124,6 @@ LOGGING = {
             "class": "logging.StreamHandler",
         },
     },
-    # Define the loggers
     "loggers": {
         "django": {
             "handlers": ["file"],
