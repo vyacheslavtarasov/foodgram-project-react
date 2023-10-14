@@ -2,15 +2,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.permissions import AllowAny
 
-
-from recipe.models import (
-    Ingredient,
-    Tag,
-)
-from recipe.serializers import (
-    IngredientSerializer,
-    TagSerializer,
-)
+from recipe.models import Ingredient, Tag
+from recipe.serializers import IngredientSerializer, TagSerializer
 
 
 class TagViewSet(

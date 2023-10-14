@@ -1,6 +1,6 @@
 import django_filters
-
 from django_filters.widgets import BooleanWidget
+
 from recipe.models import Favorite, Recipe, ShoppingCart, Tag
 
 
@@ -25,11 +25,15 @@ class RecipeFilter(django_filters.FilterSet):
     )
 
     def filter_shopping_cart(self, queryset, name, value):
+        if not self.request.user.is_authenticated:
+            return queryset.all()
         chosen = ShoppingCart.objects.filter(user=self.request.user)
         recipe_ids = [i.recipe.id for i in chosen]
         return queryset.filter(id__in=recipe_ids) if value else queryset
 
     def filter_favorite(self, queryset, name, value):
+        if not self.request.user.is_authenticated:
+            return queryset.all()
         favorited = Favorite.objects.filter(user=self.request.user)
         recipe_ids = [i.recipe.id for i in favorited]
         return queryset.filter(id__in=recipe_ids) if value else queryset

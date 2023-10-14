@@ -5,15 +5,8 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from recipe.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    RecipeTag,
-    ShoppingCart,
-    Tag,
-)
+from recipe.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                           RecipeTag, ShoppingCart, Tag)
 from user.serializers import UserSerializer4Djoser
 
 

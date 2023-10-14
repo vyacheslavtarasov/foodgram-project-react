@@ -1,17 +1,13 @@
 from django.shortcuts import get_object_or_404
+from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from djoser.views import UserViewSet
-
-from recipe.models import (
-    CustomUser,
-)
+from api.permissions import IsAuthenticated
+from recipe.models import CustomUser
 from user.models import Subscribe
 from user.serializers import SubscribeSerializer, UserSerializer
-
-from api.permissions import IsAuthenticated
 
 
 class CustomUserViewSet(UserViewSet):

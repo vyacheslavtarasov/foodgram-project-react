@@ -5,21 +5,11 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-
-from recipe.models import (
-    Favorite,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-)
-from recipe.serializers import (
-    ShoppingCartSerializer,
-    FavoriteSerializer,
-)
-from recipe.serializers import RecipeSerializer
-
 from api.filters import RecipeFilter
 from api.permissions import Browse4AllEdit4Author, IsAuthenticated
+from recipe.models import Favorite, Recipe, RecipeIngredient, ShoppingCart
+from recipe.serializers import (FavoriteSerializer, RecipeSerializer,
+                                ShoppingCartSerializer)
 
 
 class RecipeViewSet(
