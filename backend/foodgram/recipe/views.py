@@ -133,7 +133,7 @@ class RecipeViewSet(
             recipe = entry.recipe
             recipe_ingredients = RecipeIngredient.objects.filter(
                 recipe=recipe
-            ).order_by("name")
+            ).order_by("ingredient__name")
             for recipe_ingredient in recipe_ingredients:
                 if recipe_ingredient.ingredient.name in ret:
                     ret[
