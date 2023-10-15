@@ -2,6 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.permissions import AllowAny
 
+from api.filters import IngredientFilter
 from recipe.models import Ingredient, Tag
 from recipe.serializers import IngredientSerializer, TagSerializer
 
@@ -36,6 +37,7 @@ class IngredientViewSet(
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    filterset_class = IngredientFilter
 
     search_fields = ["name"]
 
