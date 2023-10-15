@@ -136,7 +136,7 @@ LOGGING = {
         },
         'django.request': {
             'handlers': ["file2"],
-            'level': 'DEBUG',  # change debug level as appropiate
+            'level': 'INFO',  # change debug level as appropiate
             'propagate': False,
         },
     },
