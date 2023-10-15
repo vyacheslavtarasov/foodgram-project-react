@@ -119,6 +119,11 @@ LOGGING = {
             "class": "logging.FileHandler",
             "filename": "djangoapp.log",
         },
+        "file2": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "djangoapp.log",
+        },
         "console": {
             "class": "logging.StreamHandler",
         },
@@ -128,6 +133,11 @@ LOGGING = {
             "handlers": ["file"],
             "level": "DEBUG",
             "propagate": True,
+        },
+        'django.request': {
+            'handlers': ["file2"],
+            'level': 'DEBUG',  # change debug level as appropiate
+            'propagate': False,
         },
     },
 }
