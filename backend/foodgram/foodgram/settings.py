@@ -119,10 +119,9 @@ LOGGING = {
             "class": "logging.FileHandler",
             "filename": "djangoapp.log",
         },
-        'file_handler': 
-        {
-            'level': DEBUG and 'DEBUG' or 'INFO',
-            'class': 'logging.FileHandler',
+        "file_handler": {
+            "level": DEBUG and "DEBUG" or "INFO",
+            "class": "logging.FileHandler",
             "filename": "djangoaccessapp.log",
         },
         "console": {
@@ -135,10 +134,10 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        'django.request': {
-        'handlers': ['file_handler'],
-        'level': DEBUG and 'DEBUG' or 'INFO',
-    },
+        "django.request": {
+            "handlers": ["file_handler"],
+            "level": DEBUG and "DEBUG" or "INFO",
+        },
     },
 }
 
