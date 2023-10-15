@@ -12,6 +12,8 @@ services:
       - pg_data:/var/lib/postgresql/data
   
   backend:
+    depends_on:
+      - db
     build: ../backend/
     env_file: .env
     volumes:
@@ -26,6 +28,9 @@ services:
       - ../frontend/:/app/result_build/
 
   nginx:
+    depends_on:
+      - backend
+      - frontend
     image: nginx:1.19.3
     ports:
       - "9000:80"
