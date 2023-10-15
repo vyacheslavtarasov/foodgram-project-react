@@ -110,27 +110,37 @@ DATABASES = {
 #     }
 # }
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "level": "INFO",
-#             "class": "logging.FileHandler",
-#             "filename": "djangoapp.log",
-#         },
-#         "console": {
-#             "class": "logging.StreamHandler",
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["file"],
-#             "level": "INFO",
-#             "propagate": True,
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "djangoapp.log",
+        },
+        'file_handler': 
+        {
+            'level': DEBUG and 'DEBUG' or 'INFO',
+            'class': 'logging.FileHandler',
+            "filename": "djangoaccessapp.log",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        'django.request': {
+        'handlers': ['file_handler'],
+        'level': DEBUG and 'DEBUG' or 'INFO',
+    },
+    },
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
