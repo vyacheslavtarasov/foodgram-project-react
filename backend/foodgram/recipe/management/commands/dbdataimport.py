@@ -5,9 +5,9 @@ from django.core.management.base import BaseCommand
 from recipe.models import Ingredient, Tag
 
 tag_data = [
-    {"name": "завтрак", "slug": "breakfast", "color": "#111111"},
-    {"name": "обед", "slug": "dinner", "color": "#222222"},
-    {"name": "ужин", "slug": "supper", "color": "#333333"},
+    {"name": "завтрак", "slug": "breakfast", "color": "#7DCEA0"},
+    {"name": "обед", "slug": "dinner", "color": "#E67E22"},
+    {"name": "ужин", "slug": "supper", "color": "#2471A3"},
 ]
 
 

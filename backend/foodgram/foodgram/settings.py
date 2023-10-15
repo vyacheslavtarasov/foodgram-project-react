@@ -110,37 +110,37 @@ DATABASES = {
 #     }
 # }
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "djangoapp.log",
-        },
-        "file2": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "djangoapp2.log",
-        },
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-        'django.request': {
-            'handlers': ["file2"],
-            'level': 'INFO',  # change debug level as appropiate
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "djangoapp.log",
+#         },
+#         "file2": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "djangoapp2.log",
+#         },
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         },
+#         'django.request': {
+#             'handlers': ["file2"],
+#             'level': 'INFO',  # change debug level as appropiate
+#             'propagate': False,
+#         },
+#     },
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
