@@ -22,7 +22,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     """Reisters model Tag"""
 
-    list_display = ("name", "measurement_name")
+    list_display = ("name", "measurement_unit")
     search_fields = ["name"]
 
 

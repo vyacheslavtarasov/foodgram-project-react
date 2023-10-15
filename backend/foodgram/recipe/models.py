@@ -13,14 +13,14 @@ class Ingredient(models.Model):
         verbose_name="Ingredient name",
         max_length=RecipeModelsConstants.NAME_LENGTH.value,
     )
-    measurement_name = models.CharField(
+    measurement_unit = models.CharField(
         verbose_name="Unit of measure",
         max_length=RecipeModelsConstants.NAME_LENGTH.value,
     )
 
     class Meta:
         verbose_name = "Ingredient"
-        unique_together = (("name", "measurement_name"),)
+        unique_together = (("name", "measurement_unit"),)
         verbose_name_plural = "Ingredients"
         ordering = ["id"]
 

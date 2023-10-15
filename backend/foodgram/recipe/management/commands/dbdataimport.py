@@ -25,7 +25,7 @@ class Command(BaseCommand):
         Ingredient.objects.all().delete()
 
         ingredient_list = [
-            Ingredient(name=d["name"], measurement_name=d["measurement_unit"])
+            Ingredient(name=d["name"], measurement_unit=d["measurement_unit"])
             for d in dictionary_list
         ]
 

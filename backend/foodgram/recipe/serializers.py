@@ -24,7 +24,7 @@ class Base64ImageField(serializers.ImageField):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = ("id", "name", "measurement_name")
+        fields = ("id", "name", "measurement_unit")
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -122,7 +122,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             .values(
                 "amount",
                 "ingredient__id",
-                measurement_unit=F("ingredient__measurement_name"),
+                measurement_unit=F("ingredient__measurement_unit"),
                 name=F("ingredient__name"),
             )
         )
